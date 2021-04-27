@@ -1,0 +1,53 @@
+name: Deploy to Firebase Hosting on merge
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node: [ 14 ]
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@master
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2.1.4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies 👨🏻‍💻
+        run: npm ci
+
+      - name: Run linter 👀
+        run: npm run lint
+
+      - name: Generate static 🏭️
+        run: npm run generate
+        env:
+          BASE_URL: 'https://api.vounty.io'
+          CLIENT_ID: ${{ secrets.CLIENT_PROD }}
+          STRIPE_KEY: ${{ secrets.STRIPE_PROD }}
+
+      - name: Deploy to Firebase 🔥
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_VOUNTY_9088B }}
+          projectId: vounty-9088b
+          channelId: live
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels

@@ -1,0 +1,30 @@
+export const state = () => ({
+  getter: null,
+  setter: null
+})
+
+export const mutations = {
+  set (state, data) {
+    state.getter = data.getter
+    state.setter = data.setter
+  }
+}
+
+export const actions = {
+  link ({ state, commit }) {
+    const url = '/storage/'
+    return this.$axios.$get(url)
+      .then((data) => {
+        commit('storage/set', data)
+        return data
+      })
+      .catch((error) => {
+        commit(
+          'error/set',
+          { message: 'Failed to retrieve a storage link.', data: null },
+          { root: true }
+        )
+        throw error
+      })
+  }
+}

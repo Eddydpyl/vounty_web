@@ -1,0 +1,48 @@
+name: Create new standard version
+on:
+  push:
+    branches:
+      - master
+jobs:
+  standard-version:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node: [ 14 ]
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_ACTION }}
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2.1.4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies 👨🏻‍💻
+        run: npm ci
+
+      - name: Run linter 👀
+        run: npm run lint
+
+      - name: Create new version 🚀
+        run: |
+          git config user.name Eddydpyl
+          git config user.email eddydpyl@gmail.com
+          npm run release
+
+      - name: Publish tag 🏷️
+        run: git push --follow-tags

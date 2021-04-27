@@ -1,0 +1,42 @@
+// Global styles (included in every page).
+.bold-text {
+  font-weight: bold;
+}
+
+.underlined {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 50% 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  text-decoration: none;
+  transition: background-size 0.1s;
+}
+
+.underlined:hover,
+.underlined:focus {
+  background-size: 100% 1px;
+  font-weight: bold;
+}
+
+.vff .text-success {
+  display: none;
+}
+
+.v-border {
+  border-color: #fff;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.v-text {
+  font-family: 'Rye', sans-serif;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.fill {
+  height: 100%;
+  width: 100%;
+}
