@@ -20,7 +20,13 @@ export const actions = {
   create ({ state, commit }, { data }) {
     const url = '/vounty/'
     return this.$axios.$post(url, data)
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           { message: 'Failed to create Vounty.', data },
@@ -39,12 +45,18 @@ export const actions = {
         else commit('set', data)
         return data
       })
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           {
             message: id
-              ? 'Failed to read Vounty. The Tag id was ' + id + '.'
+              ? 'Failed to read Vounty. The Vounty id was ' + id + '.'
               : 'Failed to read Vounty collection.',
             data: null
           },
@@ -55,7 +67,13 @@ export const actions = {
   update ({ state, commit }, { id, data }) {
     const url = '/vounty/' + id + '/'
     return this.$axios.$patch(url, data)
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           { message: 'Failed to update Vounty with id ' + id + '.', data },
@@ -67,7 +85,13 @@ export const actions = {
   delete ({ state, commit }, { id }) {
     const url = '/vounty/' + id + '/'
     return this.$axios.$delete(url)
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           { message: 'Failed to delete Vounty with id ' + id + '.', data: null },
@@ -79,7 +103,31 @@ export const actions = {
   start ({ state, commit }, { data }) {
     const url = '/vounty/start/'
     return this.$axios.$post(url, data)
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
+        commit(
+          'error/set',
+          { message: 'Failed to start Vounty.', data },
+          { root: true }
+        )
+        throw error
+      })
+  },
+  fund ({ state, commit }, { data }) {
+    const url = '/vounty/fund/'
+    return this.$axios.$post(url, data)
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           { message: 'Failed to start Vounty.', data },

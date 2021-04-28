@@ -2,10 +2,19 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-chip-group active-class="white black--text">
-          <v-chip v-for="tag in tags" :key="tag.id">
-            {{ tag.text }}
-          </v-chip>
+        <v-chip-group v-model="tagId" active-class="white black--text">
+          <template v-for="tag in tags">
+            <nuxt-link
+              :key="tag.id"
+              :to="{ name: 'discover', query: { tag: tag.id }}"
+              style="text-decoration: none;"
+              replace
+            >
+              <v-chip :value="tag.id">
+                {{ tag.text }}
+              </v-chip>
+            </nuxt-link>
+          </template>
         </v-chip-group>
       </v-col>
     </v-row>
@@ -14,7 +23,10 @@
         <h3 class="mb-3">
           Featured vounty
         </h3>
-        <vounty-card :vounty="featured" />
+        <vounty-card
+          v-if="featured"
+          :vounty="featured"
+        />
       </v-col>
       <v-col cols="12" lg="6">
         <h3 class="mb-3">
@@ -78,203 +90,17 @@ export default {
   },
   data () {
     return {
-      tags: [
-        {
-          id: 1,
-          text: 'Tag 1'
-        },
-        {
-          id: 2,
-          text: 'Tag 2'
-        },
-        {
-          id: 3,
-          text: 'Tag 3'
-        },
-        {
-          id: 4,
-          text: 'Tag 4'
-        }
-      ],
-      featured: {
-        id: 1,
-        title: 'Lorem Ipsum',
-        subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-        prize: 276.57,
-        tags: [
-          {
-            id: 1,
-            text: 'Tag 1'
-          },
-          {
-            id: 2,
-            text: 'Tag 2'
-          },
-          {
-            id: 3,
-            text: 'Tag 3'
-          },
-          {
-            id: 4,
-            text: 'Tag 4'
-          }
-        ]
-      },
-      popular: [
-        {
-          id: 1,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        }
-      ],
-      recent: [
-        {
-          id: 1,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        }
-      ]
+      featured: null,
+      popular: [],
+      recent: [],
+      tagId: null
+    }
+  },
+  async fetch () {
+    await this.readVounties()
+    await this.$store.dispatch('tag/read', {})
+    if (this.$route.query.tag != null) {
+      this.tagId = this.$route.query.tag
     }
   },
   computed: {
@@ -285,6 +111,43 @@ export default {
         case 'md': return true
         default: return false
       }
+    },
+    tags () {
+      return this.$store.state.tag.results
+    }
+  },
+  watch: {
+    $route (to, from) {
+      if (to.query.tag) {
+        this.tagId = to.query.tag
+        this.readVounties()
+      }
+    }
+  },
+  methods: {
+    async readVounties () {
+      this.featured = await this.$store.dispatch('vounty/read', {
+        params: {
+          tags__id: this.tagId,
+          featured: 'True',
+          ordering: '-date',
+          page_size: 1
+        }
+      }).then(data => data.results ? data.results[0] : null)
+      this.popular = await this.$store.dispatch('vounty/read', {
+        params: {
+          tags__id: this.tagId,
+          ordering: '-fund_count',
+          page_size: 5
+        }
+      }).then(data => data.results)
+      this.recent = await this.$store.dispatch('vounty/read', {
+        params: {
+          tags__id: this.tagId,
+          ordering: '-date',
+          page_size: 5
+        }
+      }).then(data => data.results)
     }
   }
 }

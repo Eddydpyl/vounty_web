@@ -1,6 +1,6 @@
 <template>
   <v-container style="margin-top: 32px;">
-    <v-row align="center">
+    <v-row v-if="user" align="center">
       <v-col cols="12" style="text-align: center;">
         <vounty-avatar
           size="150px"
@@ -19,13 +19,13 @@
       <v-spacer />
       <v-col cols="12" sm="8">
         <v-tabs centered background-color="transparent">
-          <v-tab @click="tab = 0">
+          <v-tab @click="switchTab(0)">
             About
           </v-tab>
-          <v-tab @click="tab = 1">
+          <v-tab @click="switchTab(1)">
             Created
           </v-tab>
-          <v-tab @click="tab = 2">
+          <v-tab @click="switchTab(2)">
             Funded
           </v-tab>
         </v-tabs>
@@ -49,8 +49,8 @@
             </v-row>
           </v-container>
         </div>
-        <p v-else>
-          {{ user.description }}
+        <p v-else-if="user">
+          <span style="white-space: pre-line;">{{ user.about }}</span>
         </p>
       </v-col>
       <v-spacer />
@@ -64,7 +64,6 @@
           :vounty="vounty"
           class="mb-4"
         />
-        <v-pagination v-model="page" :length="3" class="mt-3" />
       </v-col>
       <v-spacer />
     </v-row>
@@ -77,10 +76,15 @@
           :vounty="vounty"
           class="mb-4"
         />
-        <v-pagination v-model="page" :length="3" class="mt-3" />
       </v-col>
       <v-spacer />
     </v-row>
+    <v-pagination
+      v-if="tab !== 0"
+      v-model="page"
+      :length="Math.ceil(itemCount / pageSize || 1)"
+      @input="readItems"
+    />
   </v-container>
 </template>
 
@@ -100,160 +104,9 @@ export default {
       page: 1,
       about: '',
       maxSizeMB: 5,
-      created: [
-        {
-          id: 1,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        }
-      ],
-      funded: [
-        {
-          id: 1,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        }
-      ]
+      pageSize: 10,
+      created: [],
+      funded: []
     }
   },
   async fetch () {
@@ -266,7 +119,19 @@ export default {
       return this.$store.state.user.current
     },
     isme () {
-      return this.user.id === this.$auth.user.id
+      return this.user && this.user.id === this.$auth.user.id
+    },
+    itemCount () {
+      if (this.tab === 0) return -1
+      if (this.tab === 1) return this.created.length
+      return this.funded.length
+    }
+  },
+  watch: {
+    async $route (to, from) {
+      const id = to.query.id || this.$auth.user.id
+      await this.$store.dispatch('user/read', { id })
+      this.about = this.user.about
     }
   },
   methods: {
@@ -291,6 +156,32 @@ export default {
           about: this.about
         }
       })
+    },
+    readItems () {
+      if (this.tab === 1) return this.readCreated()
+      if (this.tab === 2) return this.readFunded()
+    },
+    async readCreated () {
+      this.created = await this.$store.dispatch('vounty/read', {
+        params: {
+          user__id: this.user.id,
+          page_size: 10,
+          page: this.page
+        }
+      }).then(data => data.results)
+    },
+    async readFunded () {
+      // TODO
+    },
+    switchTab (tab) {
+      this.tab = tab
+      this.page = 1
+      if (tab === 1) {
+        return this.readCreated()
+      }
+      if (tab === 2) {
+        return this.readFunded()
+      }
     }
   }
 }

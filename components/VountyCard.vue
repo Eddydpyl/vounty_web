@@ -32,9 +32,18 @@
     <div class="d-flex flex-no-wrap justify-space-between">
       <v-card-text>
         <v-chip-group>
-          <v-chip v-for="tag in vounty.tags" :key="tag.id">
-            {{ tag.text }}
-          </v-chip>
+          <template v-for="tag in vounty.tags">
+            <nuxt-link
+              :key="tag.id"
+              :to="{ name: 'discover', query: { tag: tag.id }}"
+              style="text-decoration: none;"
+              replace
+            >
+              <v-chip>
+                {{ tag.text }}
+              </v-chip>
+            </nuxt-link>
+          </template>
         </v-chip-group>
       </v-card-text>
       <slot name="prize">

@@ -50,7 +50,9 @@ export default {
     // https://github.com/Developmint/nuxt-purgecss
     'nuxt-purgecss',
     // https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    // https://github.com/nuxt-community/moment-module
+    '@nuxtjs/moment'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -103,6 +105,11 @@ export default {
   // PurgeCSS module configuration: https://github.com/Developmint/nuxt-purgecss#options
   purgeCSS: {
     enabled: false
+  },
+
+  // Moment module configuration: https://github.com/nuxt-community/moment-module#configuration
+  moment: {
+    timezone: true
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

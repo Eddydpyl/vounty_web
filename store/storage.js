@@ -18,7 +18,13 @@ export const actions = {
         commit('storage/set', data)
         return data
       })
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           { message: 'Failed to retrieve a storage link.', data: null },

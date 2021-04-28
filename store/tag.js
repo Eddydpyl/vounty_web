@@ -20,7 +20,13 @@ export const actions = {
   create ({ state, commit }, { data }) {
     const url = '/tag/'
     return this.$axios.$post(url, data)
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           { message: 'Failed to create Tag.', data },
@@ -39,7 +45,13 @@ export const actions = {
         else commit('set', data)
         return data
       })
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           {
@@ -55,7 +67,13 @@ export const actions = {
   update ({ state, commit }, { id, data }) {
     const url = '/tag/' + id + '/'
     return this.$axios.$patch(url, data)
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           { message: 'Failed to update Tag with id ' + id + '.', data },
@@ -67,7 +85,13 @@ export const actions = {
   delete ({ state, commit }, { id }) {
     const url = '/tag/' + id + '/'
     return this.$axios.$delete(url)
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
         commit(
           'error/set',
           { message: 'Failed to delete Tag with id ' + id + '.', data: null },

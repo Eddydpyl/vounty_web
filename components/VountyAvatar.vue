@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-hover v-slot="{ hover }">
-      <v-avatar class="v-border ma-3" size="150px" tile>
+      <v-avatar class="v-border ma-3" :size="size" tile>
         <v-img v-if="image" :src="image">
           <v-fade-transition>
             <div
@@ -86,7 +86,6 @@ export default {
 
 <style lang="scss" scoped>
 .centered-text {
-  cursor: default;
   margin-right: -50%;
   position: absolute;
   text-align: center;

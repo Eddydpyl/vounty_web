@@ -19,12 +19,6 @@
 
       <v-spacer />
 
-      <v-btn :ripple="false" plain class="bold-text">
-        Search
-        <v-icon right>
-          mdi-magnify
-        </v-icon>
-      </v-btn>
       <div v-if="!showDrawer">
         <v-menu v-if="$auth.loggedIn" bottom left>
           <template #activator="{ on, attrs }">

@@ -119,8 +119,24 @@ export default {
         console.log(err)
       }
     },
-    async register () {
-      // TODO
+    register () {
+      if (this.password === this.confirmPassword) {
+        try {
+          return this.$store.dispatch('user/create', {
+            data: {
+              username: this.username,
+              email: this.email,
+              password: this.password
+            }
+          }).then(() => this.login())
+        } catch (err) {
+          this.$refs.form.reset()
+          console.log(err)
+        }
+      } else {
+        this.password = ''
+        this.confirmPassword = ''
+      }
     }
   }
 }
