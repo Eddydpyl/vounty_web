@@ -133,9 +133,8 @@ export default {
       }
     },
     async login () {
-      const valid = this.confirm.email &&
-        this.confirm.password
-      if (!valid) return
+      if (!this.confirm.username ||
+        !this.confirm.password) return
       try {
         this.loading = true
         await this.$auth.loginWith('local', {
@@ -153,8 +152,8 @@ export default {
       }
     },
     register () {
-      const valid = this.confirm.every(x => x)
-      if (!valid) return
+      if (!Object.values(this.confirm)
+        .every(x => x)) return
       try {
         this.loading = true
         return this.$store.dispatch('user/create', {
