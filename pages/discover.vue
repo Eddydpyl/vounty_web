@@ -111,11 +111,11 @@ export default {
     }
   },
   async fetch () {
-    await this.readVounties()
-    await this.$store.dispatch('tag/read', {})
     if (this.$route.query.tag != null) {
       this.tagId = this.$route.query.tag
     }
+    await this.$store.dispatch('tag/read', {})
+    await this.readVounties()
   },
   computed: {
     mobile () {
