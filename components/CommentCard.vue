@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-no-wrap">
     <div>
-      <nuxt-link :to="{ name: 'profile', query: { id: comment.user.id }}" style="text-decoration: none;">
+      <nuxt-link :to="{ name: 'profile', query: { id: comment.user.id }}" class="no-deco">
         <vounty-avatar
           size="75px"
           font-size="50px"
@@ -33,7 +33,7 @@
     </div>
     <div style="padding-top: 8px;">
       <p class="d-none d-sm-block">
-        <nuxt-link :to="{ name: 'profile', query: { id: comment.user.id }}" style="text-decoration: none;">
+        <nuxt-link :to="{ name: 'profile', query: { id: comment.user.id }}" class="no-deco">
           <b>{{ comment.user.username }}</b> • {{ $moment(comment.date + 'Z').fromNow() }}<br>
         </nuxt-link>
         {{ comment.text }}<br>
@@ -58,7 +58,7 @@
         </v-icon>
       </p>
       <p class="d-block d-sm-none">
-        <nuxt-link :to="{ name: 'profile', query: { id: comment.user.id }}" style="text-decoration: none;">
+        <nuxt-link :to="{ name: 'profile', query: { id: comment.user.id }}" class="no-deco">
           <b>{{ comment.user.username }}</b> • {{ $moment(comment.date + 'Z').fromNow() }}<br>
         </nuxt-link>
         {{ comment.text }}

@@ -1,21 +1,20 @@
 <template>
   <v-container>
     <v-row v-if="vounty">
-      <v-col cols="12">
+      <v-col cols="12" class="break-text">
         <h1>{{ vounty.title }}</h1>
         <p>{{ vounty.subtitle }}</p>
       </v-col>
     </v-row>
     <v-row v-if="vounty">
       <v-col cols="12" md="8">
-        <div class="vounty-image">
-          <v-img v-if="vounty.image" :src="vounty.image" />
-          <div v-else class="wanted-text">
-            <p style="margin-top: 12px;">
-              Wanted<br>$$$
-            </p>
-          </div>
-        </div>
+        <vounty-banner
+          height="350px"
+          font-size="50px"
+          :image="vounty.image"
+          text="Wanted<br>$$$"
+          class="v-border"
+        />
       </v-col>
       <v-col md="4" class="d-none d-md-block">
         <h1>{{ vounty.prize }}€</h1>
@@ -24,10 +23,19 @@
         <p>Users participated</p>
         <h1>{{ entries.length }}</h1>
         <p>Entries submitted</p>
-        <v-btn block class="mb-4" @click="fundDialog=true">
+        <v-btn
+          block
+          class="mb-4"
+          :disabled="!$auth.loggedIn"
+          @click="fundDialog=true"
+        >
           Fund the vounty
         </v-btn>
-        <v-btn block @click="entryDialog=true">
+        <v-btn
+          block
+          :disabled="!$auth.loggedIn"
+          @click="entryDialog=true"
+        >
           Make a submission
         </v-btn>
       </v-col>
@@ -37,7 +45,7 @@
             <nuxt-link
               :key="tag.id"
               :to="{ name: 'discover', query: { tag: tag.id }}"
-              style="text-decoration: none;"
+              class="no-deco"
               replace
             >
               <v-chip :value="tag.id">
@@ -65,10 +73,19 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <v-btn block class="mb-4">
+              <v-btn
+                block
+                class="mb-4"
+                :disabled="!$auth.loggedIn"
+                @click="fundDialog = true"
+              >
                 Fund the vounty
               </v-btn>
-              <v-btn block>
+              <v-btn
+                block
+                :disabled="!$auth.loggedIn"
+                @click="entryDialog = true"
+              >
                 Make a submission
               </v-btn>
             </v-col>
@@ -114,7 +131,7 @@
           </v-row>
         </v-container>
         <div v-if="tab === 0">
-          <div v-if="$auth.user" class="d-flex flex-no-wrap">
+          <div v-if="$auth.loggedIn" class="d-flex flex-no-wrap">
             <vounty-avatar
               size="75px"
               font-size="50px"
@@ -124,25 +141,39 @@
             <v-text-field
               v-model="commentText"
               counter
-              max="250"
               height="70px"
               label="New comment"
               class="comment-area"
+              :rules="rules.commentText"
               @keyup.enter="createComment"
             />
           </div>
-          <comment-card
-            v-for="comment in comments"
-            :key="comment.id"
-            :comment="comment"
-          />
+          <div v-if="comments.length > 0">
+            <comment-card
+              v-for="comment in comments"
+              :key="comment.id"
+              :comment="comment"
+            />
+          </div>
+          <div v-else class="text-center">
+            <h1 class="mt-3 mb-8">
+              There's nothing here.
+            </h1>
+          </div>
         </div>
         <div v-else>
-          <entry-card
-            v-for="entry in entries"
-            :key="entry.id"
-            :entry="entry"
-          />
+          <div v-if="entries.length > 0">
+            <entry-card
+              v-for="entry in entries"
+              :key="entry.id"
+              :entry="entry"
+            />
+          </div>
+          <div v-else class="text-center">
+            <h1 class="mt-3 mb-8">
+              There's nothing here.
+            </h1>
+          </div>
         </div>
         <v-pagination
           v-model="page"
@@ -153,6 +184,7 @@
       </v-col>
     </v-row>
     <v-dialog
+      v-if="$auth.loggedIn"
       v-model="fundDialog"
       max-width="600px"
     >
@@ -203,6 +235,7 @@
       </v-card>
     </v-dialog>
     <v-dialog
+      v-if="$auth.loggedIn"
       v-model="entryDialog"
       max-width="600px"
     >
@@ -214,7 +247,10 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-textarea v-model="entryText" />
+                <v-textarea
+                  v-model="entryText"
+                  :rules="rules.entryText"
+                />
               </v-col>
             </v-row>
             <v-row>
@@ -235,6 +271,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-overlay :value="loading">
+      <v-progress-circular indeterminate />
+    </v-overlay>
   </v-container>
 </template>
 
@@ -244,6 +283,7 @@ import StripeForm from '../components/StripeForm'
 import CommentCard from '../components/CommentCard'
 import EntryCard from '../components/EntryCard'
 import VountyAvatar from '../components/VountyAvatar'
+import VountyBanner from '../components/VountyBanner'
 
 export default {
   components: {
@@ -251,7 +291,8 @@ export default {
     'stripe-form': StripeForm,
     'comment-card': CommentCard,
     'entry-card': EntryCard,
-    'vounty-avatar': VountyAvatar
+    'vounty-avatar': VountyAvatar,
+    'vounty-banner': VountyBanner
   },
   data () {
     return {
@@ -260,6 +301,7 @@ export default {
       pageSize: 10,
       commentText: '',
       entryText: '',
+      loading: false,
       fundDialog: false,
       entryDialog: false,
       orders: [
@@ -274,6 +316,21 @@ export default {
       },
       valueRange: {
         min: 5
+      },
+      confirm: {
+        commentText: false,
+        entryText: false
+      },
+      rules: {
+        commentText: [
+          v => !!v || 'The comment can\'t be empty.',
+          v => v.length < 250 || 'Maximum 250 characters long',
+          v => (this.confirm.commentText = !!v && v.length < 250)
+        ],
+        entryText: [
+          v => !!v || 'The entry can\'t be empty',
+          v => (this.confirm.entryText = !!v)
+        ]
       }
     }
   },
@@ -308,8 +365,12 @@ export default {
   },
   methods: {
     readVounty () {
+      this.loading = true
       return this.$store.dispatch('vounty/read', {
         id: this.$route.query.id
+      }).then((data) => {
+        this.loading = false
+        return data
       })
     },
     readItems () {
@@ -320,55 +381,68 @@ export default {
       }
     },
     async createComment () {
-      if (this.commentText.length === 0) return
+      if (!this.confirm.commentText) return
+      this.loading = true
       await this.$store.dispatch('comment/create', {
         data: {
           user: this.$auth.user.id,
           vounty: this.vounty.id,
           text: this.commentText
         }
-      }).then(async (result) => {
+      }).then(async (data) => {
         await this.readComments()
         this.commentText = ''
-        return result
+        this.loading = false
+        return data
       })
     },
     readComments () {
+      this.loading = true
       return this.$store.dispatch('comment/read', {
         params: {
           vounty__id: this.vounty.id,
           page: this.page,
           ordering: this.ordering
         }
+      }).then((data) => {
+        this.loading = false
+        return data
       })
     },
     async createEntry () {
-      if (this.entryText.length === 0) return
+      if (!this.confirm.entryText) return
+      this.loading = true
       await this.$store.dispatch('entry/create', {
         data: {
           user: this.$auth.user.id,
           vounty: this.vounty.id,
           text: this.entryText
         }
-      }).then(async (result) => {
+      }).then(async (data) => {
         await this.readEntries()
         this.entryDialog = false
         this.entryText = ''
-        return result
+        this.loading = false
+        return data
       })
     },
     readEntries () {
+      this.loading = true
       return this.$store.dispatch('entry/read', {
         params: {
           vounty__id: this.vounty.id,
           page: this.page,
           ordering: this.ordering
         }
+      }).then((data) => {
+        this.loading = false
+        return data
       })
     },
     fundVounty () {
       this.$refs.stripe.submit()
       this.fundDialog = false
+      this.loading = true
     },
     stripeToken (token) {
       this.$refs.stripe.clear()
@@ -378,9 +452,10 @@ export default {
           id: this.vounty.id,
           amount: this.vounty.prize
         }
-      }).then((result) => {
-        this.readVounty()
-        return result
+      }).then(async (data) => {
+        await this.readVounty()
+        this.loading = false
+        return data
       })
     },
     stripeError (error) {
@@ -415,17 +490,6 @@ export default {
 
 .prize-input:focus {
   outline: none;
-}
-
-.vounty-image {
-  border-color: #fff;
-  border-style: solid;
-  border-width: 1px;
-  width: 100%;
-}
-
-.vounty-image .v-image {
-  max-height: 350px;
 }
 
 ::v-deep .theme--dark.v-pagination .v-pagination__item--active {

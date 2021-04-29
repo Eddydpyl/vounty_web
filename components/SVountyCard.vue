@@ -4,19 +4,19 @@
       <nuxt-link
         v-if="vounty.id && !editable"
         :to="{ name: 'vounty', query: { id: vounty.id }}"
-        style="text-decoration: none;"
+        class="break-text no-deco"
       >
         <v-card-title v-text="vounty.title" />
         <v-card-subtitle v-text="vounty.subtitle" />
       </nuxt-link>
-      <div v-else>
+      <div v-else class="break-text">
         <v-card-title v-text="vounty.title" />
         <v-card-subtitle v-text="vounty.subtitle" />
       </div>
       <nuxt-link
         v-if="vounty.id && !editable"
         :to="{ name: 'vounty', query: { id: vounty.id }}"
-        style="text-decoration: none;"
+        class="no-deco"
       >
         <vounty-avatar
           size="125px"
@@ -46,7 +46,7 @@
             <nuxt-link
               :key="tag.id"
               :to="{ name: 'discover', query: { tag: tag.id }}"
-              style="text-decoration: none;"
+              class="no-deco"
               replace
             >
               <v-chip>

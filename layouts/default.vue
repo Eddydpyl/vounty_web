@@ -146,13 +146,13 @@
             <span class="bold-text">
               &copy;&nbsp;&nbsp;Vounty&nbsp;&nbsp;|&nbsp;
             </span>
-            <NuxtLink to="/terms" class="underlined">
+            <NuxtLink to="/terms" class="underlined no-deco">
               Terms of Use
             </NuxtLink>&nbsp;|&nbsp;
-            <NuxtLink to="/privacy" class="underlined">
+            <NuxtLink to="/privacy" class="underlined no-deco">
               Privacy Policy
             </NuxtLink>&nbsp;|&nbsp;
-            <NuxtLink to="/cookies" class="underlined">
+            <NuxtLink to="/cookies" class="underlined no-deco">
               Cookie Policy
             </NuxtLink>
           </v-col>

@@ -56,13 +56,16 @@
           </v-row>
         </v-container>
       </v-card>
-      <v-btn class="svb" @click="$refs.stripe.submit()">
+      <v-btn class="svb" @click="startVounty">
         <span>Start Vounty</span>
       </v-btn>
     </template>
     <template #completeButton>
       <div />
     </template>
+    <v-overlay :value="loading">
+      <v-progress-circular indeterminate />
+    </v-overlay>
   </flow-form>
 </template>
 
@@ -88,6 +91,7 @@ export default {
       file: null,
       description: '',
       completed: false,
+      loading: false,
       currency: {
         prefix: '',
         suffix: '€'
@@ -158,6 +162,10 @@ export default {
     onComplete (completed, questionList) {
       this.completed = completed
     },
+    startVounty () {
+      this.loading = true
+      this.$refs.stripe.submit()
+    },
     async stripeToken (token) {
       let image = ''
       if (this.file) {
@@ -173,14 +181,16 @@ export default {
           tags: this.vounty.tags,
           image
         }
-      }).then((result) => {
+      }).then((data) => {
+        this.loading = false
         this.$router.push({
-          path: '/vounty?id=' + result.id
+          path: '/vounty?id=' + data.id
         })
       })
     },
     stripeError (error) {
       // TODO: Handle error.
+      this.loading = false
       throw error
     },
     upload (e) {

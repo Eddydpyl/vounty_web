@@ -7,7 +7,7 @@
             <nuxt-link
               :key="tag.id"
               :to="{ name: 'discover', query: { tag: tag.id }}"
-              style="text-decoration: none;"
+              class="no-deco"
               replace
             >
               <v-chip :value="tag.id">
@@ -18,7 +18,7 @@
         </v-chip-group>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="popular.length > 0">
       <v-col cols="12" lg="6">
         <h3 class="mb-3">
           Featured vounty
@@ -26,6 +26,7 @@
         <vounty-card
           v-if="featured"
           :vounty="featured"
+          height="450px"
         />
       </v-col>
       <v-col cols="12" lg="6">
@@ -50,7 +51,7 @@
         </div>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="recent.length > 0">
       <v-col cols="12">
         <h3 class="mb-3">
           Recent vounties
@@ -76,6 +77,14 @@
         </div>
       </v-col>
     </v-row>
+    <v-row v-else no-gutters>
+      <v-col cols="12">
+        <h1>There's nothing here...</h1>
+      </v-col>
+    </v-row>
+    <v-overlay :value="loading">
+      <v-progress-circular indeterminate />
+    </v-overlay>
   </v-container>
 </template>
 
@@ -90,6 +99,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       featured: null,
       popular: [],
       recent: [],
@@ -126,6 +136,7 @@ export default {
   },
   methods: {
     async readVounties () {
+      this.loading = true
       this.featured = await this.$store.dispatch('vounty/read', {
         params: {
           tags__id: this.tagId,
@@ -148,6 +159,7 @@ export default {
           page_size: 5
         }
       }).then(data => data.results)
+      this.loading = false
     }
   }
 }

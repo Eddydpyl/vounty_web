@@ -27,7 +27,6 @@
             @keyup.enter="submit"
           />
           <v-text-field
-            id="password"
             v-model="password"
             :rules="rules.password"
             prepend-icon="mdi-lock"
@@ -38,11 +37,10 @@
           />
           <v-text-field
             v-if="tab === 1"
-            id="confirmPassword"
-            v-model="confirmPassword"
-            :rules="rules.confirmPassword"
+            v-model="repassword"
+            :rules="rules.repassword"
             prepend-icon="mdi-lock"
-            name="confirmPassword"
+            name="repassword"
             label="Confirm Password"
             type="password"
             @keyup.enter="submit"
@@ -74,6 +72,9 @@
         </v-form>
       </v-col>
     </v-row>
+    <v-overlay :value="loading">
+      <v-progress-circular indeterminate />
+    </v-overlay>
   </v-container>
 </template>
 
@@ -85,14 +86,40 @@ export default {
       username: '',
       email: '',
       password: '',
-      confirmPassword: '',
+      repassword: '',
       tab: 0,
       valid: false,
+      loading: false,
+      confirm: {
+        username: false,
+        email: false,
+        password: false,
+        repassword: false
+      },
       rules: {
-        username: [v => !!v || 'Username is required'],
-        email: [v => !!v || 'Email is required'],
-        password: [v => !!v || 'Password is required'],
-        confirmPassword: [v => !!v || 'Confirm your password']
+        username: [
+          v => !!v || 'Username is required',
+          v => (this.confirm.username = !!v)
+        ],
+        email: [
+          v => !!v || 'Email is required',
+          v => /.+@.+\..+/.test(v) || 'The email is not valid',
+          v => (this.confirm.email = !!v && /.+@.+\..+/.test(v))
+        ],
+        password: [
+          v => !!v || 'Password is required',
+          v => v !== this.username || 'The password can\'t match your username',
+          v => v !== this.email || 'The password can\'t match your email',
+          v => v.length > 8 || 'The password must be 8 characters or longer',
+          v => isNaN(v) || 'The password can\'t be only numbers',
+          v => (this.confirm.password = !!v && v !== this.username &&
+            v !== this.email && v.length > 8 && isNaN(v))
+        ],
+        repassword: [
+          v => !!v || 'Confirm your password',
+          v => v === this.password || 'The passwords don\'t match',
+          v => (this.confirm.repassword = !!v && v === this.password)
+        ]
       }
     }
   },
@@ -106,37 +133,47 @@ export default {
       }
     },
     async login () {
+      const valid = this.confirm.email &&
+        this.confirm.password
+      if (!valid) return
       try {
+        this.loading = true
         await this.$auth.loginWith('local', {
           data: {
             username: this.username,
             password: this.password
           }
         })
+        this.loading = false
         return this.$router.push({ path: '/' })
       } catch (err) {
         this.$refs.form.reset()
+        this.loading = false
         console.log(err)
       }
     },
     register () {
-      if (this.password === this.confirmPassword) {
-        try {
-          return this.$store.dispatch('user/create', {
-            data: {
-              username: this.username,
-              email: this.email,
-              password: this.password
-            }
-          }).then(() => this.login())
-        } catch (err) {
-          this.$refs.form.reset()
-          console.log(err)
-        }
-      } else {
-        this.password = ''
-        this.confirmPassword = ''
+      const valid = this.confirm.every(x => x)
+      if (!valid) return
+      try {
+        this.loading = true
+        return this.$store.dispatch('user/create', {
+          data: {
+            username: this.username,
+            email: this.email,
+            password: this.password
+          }
+        }).then(async () => {
+          await this.login()
+          this.loading = false
+        })
+      } catch (err) {
+        this.$refs.form.reset()
+        this.loading = false
+        console.log(err)
       }
+      this.password = ''
+      this.repassword = ''
     }
   }
 }

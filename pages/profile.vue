@@ -57,7 +57,7 @@
     </v-row>
     <v-row v-if="tab === 1">
       <v-spacer />
-      <v-col cols="12" sm="8">
+      <v-col v-if="created.length > 0" cols="12" sm="8">
         <small-vounty-card
           v-for="vounty in created"
           :key="vounty.id"
@@ -65,17 +65,27 @@
           class="mb-4"
         />
       </v-col>
+      <v-col v-else cols="12" sm="8" class="text-center">
+        <h1 class="mt-3 mb-8">
+          There's nothing here.
+        </h1>
+      </v-col>
       <v-spacer />
     </v-row>
     <v-row v-if="tab === 2">
       <v-spacer />
-      <v-col cols="12" sm="8">
+      <v-col v-if="funded.length > 0" cols="12" sm="8">
         <small-vounty-card
           v-for="vounty in funded"
           :key="vounty.id"
           :vounty="vounty"
           class="mb-4"
         />
+      </v-col>
+      <v-col v-else cols="12" sm="8" class="text-center">
+        <h1 class="mt-3 mb-8">
+          There's nothing here.
+        </h1>
       </v-col>
       <v-spacer />
     </v-row>
@@ -85,6 +95,9 @@
       :length="Math.ceil(itemCount / pageSize || 1)"
       @input="readItems"
     />
+    <v-overlay :value="loading">
+      <v-progress-circular indeterminate />
+    </v-overlay>
   </v-container>
 </template>
 
@@ -103,6 +116,7 @@ export default {
       tab: 0,
       page: 1,
       about: '',
+      loading: false,
       maxSizeMB: 5,
       pageSize: 10,
       created: [],
@@ -110,9 +124,11 @@ export default {
     }
   },
   async fetch () {
+    this.loading = true
     const id = this.$route.query.id || this.$auth.user.id
     await this.$store.dispatch('user/read', { id })
     this.about = this.user.about
+    this.loading = false
   },
   computed: {
     user () {
@@ -129,14 +145,17 @@ export default {
   },
   watch: {
     async $route (to, from) {
+      this.loading = true
       const id = to.query.id || this.$auth.user.id
       await this.$store.dispatch('user/read', { id })
       this.about = this.user.about
+      this.loading = false
     }
   },
   methods: {
     async upload (e) {
       if (e.target.files) {
+        this.loading = true
         const file = e.target.files[0]
         const links = await this.$store.dispatch('storage/link')
         const image = await UploadService.uploadImage(file, links, this.maxSizeMB)
@@ -147,14 +166,19 @@ export default {
         await this.$store.dispatch('user/read', {
           id: this.user.id
         })
+        this.loading = false
       }
     },
     updateAbout () {
+      this.loading = true
       return this.$store.dispatch('user/update', {
         id: this.user.id,
         data: {
           about: this.about
         }
+      }).then((data) => {
+        this.loading = false
+        return data
       })
     },
     readItems () {
@@ -162,6 +186,7 @@ export default {
       if (this.tab === 2) return this.readFunded()
     },
     async readCreated () {
+      this.loading = true
       this.created = await this.$store.dispatch('vounty/read', {
         params: {
           user__id: this.user.id,
@@ -169,8 +194,10 @@ export default {
           page: this.page
         }
       }).then(data => data.results)
+      this.loading = false
     },
     async readFunded () {
+      this.loading = true
       this.funded = await this.$store.dispatch('fund/read', {
         params: {
           user__id: this.user.id,
@@ -178,6 +205,7 @@ export default {
           page: this.page
         }
       }).then(data => this.unique(data.results.map(f => f.vounty)))
+      this.loading = false
     },
     switchTab (tab) {
       this.tab = tab
@@ -192,6 +220,7 @@ export default {
     unique (arr) {
       const a = []
       for (let i = 0; i < arr.length; i++) {
+        if (arr[i] == null) continue
         const m = a.filter(x => x.id === arr[i].id)
         if (m.length === 0) {
           a.push(arr[i])

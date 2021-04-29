@@ -24,7 +24,7 @@
       </div>
       <div>
         <div class="d-flex flex-no-wrap">
-          <nuxt-link :to="{ name: 'profile', query: { id: entry.user.id }}" style="text-decoration: none;">
+          <nuxt-link :to="{ name: 'profile', query: { id: entry.user.id }}" class="no-deco">
             <vounty-avatar
               size="25px"
               font-size="16px"
@@ -32,7 +32,7 @@
               text="V"
             />
           </nuxt-link>
-          <nuxt-link :to="{ name: 'profile', query: { id: entry.user.id }}" style="text-decoration: none;">
+          <nuxt-link :to="{ name: 'profile', query: { id: entry.user.id }}" class="no-deco">
             <div style="margin-top: 12px;">
               <b>{{ entry.user.username }}</b> • {{ $moment(entry.date + 'Z').fromNow() }}<br>
             </div>

@@ -15,7 +15,7 @@ export const actions = {
     const url = '/storage/'
     return this.$axios.$get(url)
       .then((data) => {
-        commit('storage/set', data)
+        commit('set', data)
         return data
       })
       .catch(async (error) => {
