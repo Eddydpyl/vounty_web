@@ -26,7 +26,7 @@
         <vounty-card
           v-if="featured"
           :vounty="featured"
-          height="450px"
+          :height="featureHeight"
         />
       </v-col>
       <v-col cols="12" lg="6">
@@ -41,7 +41,11 @@
             :class="{ 'mb-5': index !== popular.length - 1 }"
           />
         </div>
-        <div v-else class="popular-scroll">
+        <div
+          v-else
+          class="popular-scroll"
+          :style="scrollStyle"
+        >
           <small-vounty-card
             v-for="vounty in popular"
             :key="vounty.id"
@@ -122,6 +126,17 @@ export default {
         default: return false
       }
     },
+    featureHeight () {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return null
+        case 'sm': return null
+        case 'md': return null
+        default: return '500px'
+      }
+    },
+    scrollStyle () {
+      return 'height: ' + this.featureHeight + ';'
+    },
     tags () {
       return this.$store.state.tag.results
     }
@@ -167,7 +182,6 @@ export default {
 
 <style lang="scss" scoped>
 .popular-scroll {
-  max-height: 450px;
   overflow-y: auto;
   padding-right: 10px;
 }
