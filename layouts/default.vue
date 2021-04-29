@@ -2,8 +2,10 @@
   <v-app dark>
     <v-app-bar fixed app>
       <v-app-bar-nav-icon v-if="showDrawer" @click.stop="drawer = !drawer" />
-      <v-app-bar-title v-if="showDrawer" class="wanted-title" v-text="'Vounty'" />
-      <v-app-bar-title v-else class="wanted-title" style="margin-left: 26px;" v-text="'Vounty'" />
+      <nuxt-link to="/" class="no-deco">
+        <v-app-bar-title v-if="showDrawer" class="wanted-title" v-text="'Vounty'" />
+        <v-app-bar-title v-else class="wanted-title" style="margin-left: 26px;" v-text="'Vounty'" />
+      </nuxt-link>
 
       <v-tabs v-if="!showDrawer" align-with-title optional>
         <v-tab to="/" nuxt class="bold-text">
