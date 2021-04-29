@@ -182,6 +182,7 @@ export default {
           image
         }
       }).then((data) => {
+        this.$refs.stripe.clear()
         this.loading = false
         this.$router.push({
           path: '/vounty?id=' + data.id

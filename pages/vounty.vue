@@ -441,25 +441,26 @@ export default {
     },
     fundVounty () {
       this.$refs.stripe.submit()
-      this.fundDialog = false
       this.loading = true
     },
     stripeToken (token) {
-      this.$refs.stripe.clear()
       return this.$store.dispatch('vounty/fund', {
         data: {
           token,
           id: this.vounty.id,
-          amount: this.vounty.prize
+          amount: this.prize
         }
       }).then(async (data) => {
         await this.readVounty()
+        this.$refs.stripe.clear()
+        this.fundDialog = false
         this.loading = false
         return data
       })
     },
     stripeError (error) {
       // TODO: Handle error.
+      this.loading = false
       throw error
     },
     switchTab (tab) {
