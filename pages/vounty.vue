@@ -271,7 +271,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-overlay :value="loading">
+    <v-overlay :value="loading" style="z-index: 1000;">
       <v-progress-circular indeterminate />
     </v-overlay>
   </v-container>
