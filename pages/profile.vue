@@ -171,7 +171,13 @@ export default {
       }).then(data => data.results)
     },
     async readFunded () {
-      // TODO
+      this.funded = await this.$store.dispatch('fund/read', {
+        params: {
+          user__id: this.user.id,
+          page_size: 10,
+          page: this.page
+        }
+      }).then(data => this.unique(data.results.map(f => f.vounty)))
     },
     switchTab (tab) {
       this.tab = tab
@@ -182,6 +188,16 @@ export default {
       if (tab === 2) {
         return this.readFunded()
       }
+    },
+    unique (arr) {
+      const a = []
+      for (let i = 0; i < arr.length; i++) {
+        const m = a.filter(x => x.id === arr[i].id)
+        if (m.length === 0) {
+          a.push(arr[i])
+        }
+      }
+      return a
     }
   }
 }
