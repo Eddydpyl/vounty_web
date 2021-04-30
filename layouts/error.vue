@@ -7,11 +7,11 @@
       <h1>{{ error.statusCode }} Something went wrong</h1>
       <h2>Please, send a screenshot to <a href="mailto:eddydpyl@vounty.io" target="_blank">eddydpyl@vounty.io</a></h2>
     </div>
-    <div v-if="message">
-      <h3>{{ message }}</h3>
+    <div v-if="method">
+      <h3>Unhandled error when calling {{ method }}</h3>
       <p />
     </div>
-    <pre v-if="data"><code>{{ JSON.stringify(data, null, 2) }}</code></pre>
+    <pre v-if="payload"><code>{{ JSON.stringify(payload, null, 2) }}</code></pre>
   </v-app>
 </template>
 
@@ -25,11 +25,11 @@ export default {
     }
   },
   computed: {
-    message () {
-      return this.$store.state.error.message
+    method () {
+      return this.$store.state.error.method
     },
-    data () {
-      return this.$store.state.error.data
+    payload () {
+      return this.$store.state.error.payload
     }
   }
 }

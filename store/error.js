@@ -1,11 +1,11 @@
 export const state = () => ({
-  message: '',
-  data: null
+  method: '',
+  payload: null
 })
 
 export const mutations = {
   set (state, error) {
-    state.message = error.message
-    state.data = error.data
+    state.method = error.method
+    state.payload = error.payload
   }
 }

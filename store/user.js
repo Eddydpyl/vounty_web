@@ -27,11 +27,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to create User.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'user/create',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   },
@@ -52,15 +51,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          {
-            message: id
-              ? 'Failed to read User. The User id was ' + id + '.'
-              : 'Failed to read User collection.',
-            data: null
-          },
-          { root: true })
+        commit('error/set', {
+          method: 'user/read',
+          payload: { id, params }
+        }, { root: true })
         throw error
       })
   },
@@ -74,11 +68,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to update User with id ' + id + '.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'user/update',
+          payload: { id, data }
+        }, { root: true })
         throw error
       })
   },
@@ -92,11 +85,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to delete User with id ' + id + '.', data: null },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'user/delete',
+          payload: { id }
+        }, { root: true })
         throw error
       })
   }

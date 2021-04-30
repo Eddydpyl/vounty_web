@@ -27,11 +27,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to create Entry.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'entry/create',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   },
@@ -52,15 +51,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          {
-            message: id
-              ? 'Failed to read Entry. The Entry id was ' + id + '.'
-              : 'Failed to read Entry collection.',
-            data: null
-          },
-          { root: true })
+        commit('error/set', {
+          method: 'entry/read',
+          payload: { id, params }
+        }, { root: true })
         throw error
       })
   },
@@ -74,11 +68,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to update Entry with id ' + id + '.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'entry/update',
+          payload: { id, data }
+        }, { root: true })
         throw error
       })
   },
@@ -92,11 +85,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to delete Entry with id ' + id + '.', data: null },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'entry/delete',
+          payload: { id }
+        }, { root: true })
         throw error
       })
   },
@@ -110,11 +102,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to vote on Entry.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'entry/vote',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   }

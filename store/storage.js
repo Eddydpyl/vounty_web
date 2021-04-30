@@ -25,11 +25,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to retrieve a storage link.', data: null },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'storage/link',
+          payload: { }
+        }, { root: true })
         throw error
       })
   }

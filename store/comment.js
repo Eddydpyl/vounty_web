@@ -27,11 +27,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to create Comment.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'comment/create',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   },
@@ -52,15 +51,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          {
-            message: id
-              ? 'Failed to read Comment. The Comment id was ' + id + '.'
-              : 'Failed to read Comment collection.',
-            data: null
-          },
-          { root: true })
+        commit('error/set', {
+          method: 'comment/read',
+          payload: { id, params }
+        }, { root: true })
         throw error
       })
   },
@@ -74,11 +68,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to update Comment with id ' + id + '.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'comment/update',
+          payload: { id, data }
+        }, { root: true })
         throw error
       })
   },
@@ -92,11 +85,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to delete Comment with id ' + id + '.', data: null },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'comment/delete',
+          payload: { id }
+        }, { root: true })
         throw error
       })
   },
@@ -110,11 +102,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to vote on Comment.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'comment/vote',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   }

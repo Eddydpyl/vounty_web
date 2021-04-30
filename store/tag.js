@@ -27,11 +27,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to create Tag.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'tag/create',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   },
@@ -52,15 +51,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          {
-            message: id
-              ? 'Failed to read Tag. The Tag id was ' + id + '.'
-              : 'Failed to read Tag collection.',
-            data: null
-          },
-          { root: true })
+        commit('error/set', {
+          method: 'tag/read',
+          payload: { id, params }
+        }, { root: true })
         throw error
       })
   },
@@ -74,11 +68,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to update Tag with id ' + id + '.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'tag/update',
+          payload: { id, data }
+        }, { root: true })
         throw error
       })
   },
@@ -92,11 +85,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to delete Tag with id ' + id + '.', data: null },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'tag/delete',
+          payload: { id }
+        }, { root: true })
         throw error
       })
   }

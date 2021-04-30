@@ -27,11 +27,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to create Fund.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'fund/create',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   },
@@ -52,15 +51,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          {
-            message: id
-              ? 'Failed to read Fund. The Fund id was ' + id + '.'
-              : 'Failed to read Fund collection.',
-            data: null
-          },
-          { root: true })
+        commit('error/set', {
+          method: 'fund/read',
+          payload: { id, params }
+        }, { root: true })
         throw error
       })
   },
@@ -74,11 +68,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to update Fund with id ' + id + '.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'fund/update',
+          payload: { id, data }
+        }, { root: true })
         throw error
       })
   },
@@ -92,11 +85,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to delete Fund with id ' + id + '.', data: null },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'fund/delete',
+          payload: { id }
+        }, { root: true })
         throw error
       })
   }

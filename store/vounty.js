@@ -27,11 +27,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to create Vounty.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'vounty/create',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   },
@@ -52,15 +51,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          {
-            message: id
-              ? 'Failed to read Vounty. The Vounty id was ' + id + '.'
-              : 'Failed to read Vounty collection.',
-            data: null
-          },
-          { root: true })
+        commit('error/set', {
+          method: 'vounty/read',
+          payload: { id, params }
+        }, { root: true })
         throw error
       })
   },
@@ -74,11 +68,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to update Vounty with id ' + id + '.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'vounty/update',
+          payload: { id, data }
+        }, { root: true })
         throw error
       })
   },
@@ -92,11 +85,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to delete Vounty with id ' + id + '.', data: null },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'vounty/delete',
+          payload: { id }
+        }, { root: true })
         throw error
       })
   },
@@ -110,11 +102,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to start Vounty.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'vounty/start',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   },
@@ -128,11 +119,10 @@ export const actions = {
             path: '/login'
           })
         }
-        commit(
-          'error/set',
-          { message: 'Failed to start Vounty.', data },
-          { root: true }
-        )
+        commit('error/set', {
+          method: 'vounty/fund',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   }
