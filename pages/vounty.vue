@@ -340,6 +340,11 @@ export default {
       await this.readComments()
     }
   },
+  head () {
+    return {
+      title: this.vounty?.title || ''
+    }
+  },
   computed: {
     vounty () {
       return this.$store.state.vounty.current

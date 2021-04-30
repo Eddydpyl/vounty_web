@@ -134,6 +134,11 @@ export default {
       options
     }))
   },
+  head () {
+    return {
+      title: 'Start a Vounty'
+    }
+  },
   computed: {
     mobile () {
       switch (this.$vuetify.breakpoint.name) {

@@ -122,6 +122,11 @@ export default {
       }
     }
   },
+  head () {
+    return {
+      title: 'Login'
+    }
+  },
   computed: {
     valid () {
       if (this.tab === 0) return this.confirm.username && this.confirm.password

@@ -50,7 +50,13 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head () {
+    return {
+      title: 'How it Works'
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

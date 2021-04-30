@@ -19,7 +19,13 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head () {
+    return {
+      title: 'Terms of Use'
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

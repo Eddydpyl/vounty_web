@@ -117,6 +117,11 @@ export default {
     await this.$store.dispatch('tag/read', {})
     await this.readVounties()
   },
+  head () {
+    return {
+      title: 'Discover'
+    }
+  },
   computed: {
     mobile () {
       switch (this.$vuetify.breakpoint.name) {

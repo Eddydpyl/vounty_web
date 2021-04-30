@@ -130,6 +130,11 @@ export default {
     this.about = this.user.about
     this.loading = false
   },
+  head () {
+    return {
+      title: this.user?.username || ''
+    }
+  },
   computed: {
     user () {
       return this.$store.state.user.current
