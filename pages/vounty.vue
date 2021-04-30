@@ -381,7 +381,8 @@ export default {
       }
     },
     async createComment () {
-      if (!this.confirm.commentText) return
+      if (!this.confirm.commentText ||
+        this.loading) return
       this.loading = true
       await this.$store.dispatch('comment/create', {
         data: {
@@ -410,7 +411,8 @@ export default {
       })
     },
     async createEntry () {
-      if (!this.confirm.entryText) return
+      if (!this.confirm.entryText ||
+        this.loading) return
       this.loading = true
       await this.$store.dispatch('entry/create', {
         data: {
@@ -440,6 +442,7 @@ export default {
       })
     },
     fundVounty () {
+      if (this.loading) return
       this.$refs.stripe.submit()
       this.loading = true
     },

@@ -163,8 +163,9 @@ export default {
       this.completed = completed
     },
     startVounty () {
-      this.loading = true
+      if (this.loading) return
       this.$refs.stripe.submit()
+      this.loading = true
     },
     async stripeToken (token) {
       let image = ''

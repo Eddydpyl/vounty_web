@@ -88,7 +88,6 @@ export default {
       password: '',
       repassword: '',
       tab: 0,
-      valid: false,
       loading: false,
       confirm: {
         username: false,
@@ -123,6 +122,12 @@ export default {
       }
     }
   },
+  computed: {
+    valid () {
+      if (this.tab === 0) return this.confirm.username && this.confirm.password
+      else return Object.values(this.confirm).every(x => x)
+    }
+  },
   methods: {
     submit () {
       this.$refs.form.validate()
@@ -132,47 +137,53 @@ export default {
         this.register()
       }
     },
-    async login () {
-      if (!this.confirm.username ||
-        !this.confirm.password) return
-      try {
-        this.loading = true
-        await this.$auth.loginWith('local', {
-          data: {
-            username: this.username,
-            password: this.password
-          }
-        })
+    login () {
+      if (!this.valid ||
+        this.loading) return
+      this.loading = true
+      return this.$auth.loginWith('local', {
+        data: {
+          username: this.username,
+          password: this.password
+        }
+      }).then(() => {
         this.loading = false
         return this.$router.push({ path: '/' })
-      } catch (err) {
+      }).catch((error) => {
+        this.$store.commit('error/set',
+          { method: 'login' })
         this.$refs.form.reset()
         this.loading = false
-        console.log(err)
-      }
+        throw error
+      })
     },
     register () {
-      if (!Object.values(this.confirm)
-        .every(x => x)) return
-      try {
-        this.loading = true
-        return this.$store.dispatch('user/create', {
+      if (!this.valid ||
+        this.loading) return
+      this.loading = true
+      return this.$store.dispatch('user/create', {
+        data: {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        }
+      }).then(() => {
+        return this.$auth.loginWith('local', {
           data: {
             username: this.username,
-            email: this.email,
             password: this.password
           }
-        }).then(async () => {
-          await this.login()
+        }).then(() => {
           this.loading = false
+          return this.$router.push({ path: '/' })
+        }).catch((error) => {
+          this.$store.commit('error/set',
+            { method: 'login' })
+          this.$refs.form.reset()
+          this.loading = false
+          throw error
         })
-      } catch (err) {
-        this.$refs.form.reset()
-        this.loading = false
-        console.log(err)
-      }
-      this.password = ''
-      this.repassword = ''
+      })
     }
   }
 }

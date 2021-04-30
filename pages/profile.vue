@@ -154,6 +154,7 @@ export default {
   },
   methods: {
     async upload (e) {
+      if (this.loading) return
       if (e.target.files) {
         this.loading = true
         const file = e.target.files[0]
@@ -170,6 +171,7 @@ export default {
       }
     },
     updateAbout () {
+      if (this.loading) return
       this.loading = true
       return this.$store.dispatch('user/update', {
         id: this.user.id,
