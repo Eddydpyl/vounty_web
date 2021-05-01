@@ -11,7 +11,7 @@
         Almost done!
       </h2>
       <p class="final-subtitle">
-        Below is a preview of how your vounty would look. You can add an image to the vounty. You can also click on the prize money to change how much you would like to contribute to kick things off. The minimum amount is 5€. Your credit card information is not stored in our database, and only used to process the payment through Stripe.
+        Below is a preview of how your vounty would look. You can add an image to the vounty by clicking on it. You can also click on the prize money to change how much you would like to contribute to kick things off. The minimum amount is 5€. Below the vounty preview, you can add a more complete description, and your credit card information. Your credit card information is not stored in our database, nor shared with any other third party, and only used to process the payment through Stripe.
       </p>
       <vounty-card
         v-if="mobile"
@@ -43,7 +43,11 @@
           />
         </template>
       </small-vounty-card>
-      <v-card class="stripe-card">
+      <tiptap-input
+        v-model="description"
+        class="mt-4"
+      />
+      <v-card class="mt-4">
         <v-container fill-height fluid>
           <v-row align="center" justify="center">
             <v-col cols="12">
@@ -56,7 +60,7 @@
           </v-row>
         </v-container>
       </v-card>
-      <v-btn class="svb" @click="startVounty">
+      <v-btn class="mt-4" @click="startVounty">
         <span>Start Vounty</span>
       </v-btn>
     </template>
@@ -74,6 +78,7 @@ import FlowForm, { QuestionModel, ChoiceOption, QuestionType, LanguageModel } fr
 import StripeForm from '../components/StripeForm'
 import VountyCard from '../components/VountyCard'
 import SVountyCard from '../components/SVountyCard'
+import TiptapInput from '../components/TiptapInput'
 import UploadService from '../services/upload'
 
 export default {
@@ -81,7 +86,8 @@ export default {
     'flow-form': FlowForm,
     'stripe-form': StripeForm,
     'vounty-card': VountyCard,
-    'small-vounty-card': SVountyCard
+    'small-vounty-card': SVountyCard,
+    'tiptap-input': TiptapInput
   },
   middleware: 'auth',
   data () {
@@ -102,15 +108,15 @@ export default {
       questions: [
         new QuestionModel({
           title: 'What is the vounty for?',
-          subtitle: 'Describe in a short sentence what it is that you are looking for. Be specific, but also keep it brief. You will have a chance to provide more details in the next section.',
+          subtitle: 'Describe in a short sentence what it is that you are looking for. Be specific, but also keep it brief. You will have a chance to provide more details in a moment.',
           placeholder: 'Name of the vounty...',
           type: QuestionType.Text,
           required: true
         }),
         new QuestionModel({
           title: 'How does one claim the vounty?',
-          subtitle: 'Tell people how they can go about proving that the have accomplished the task. You should also provide any other pertinent details about the goal. Give background information, if needed.',
-          placeholder: 'Description of the vounty...',
+          subtitle: 'Tell people how they can go about proving that they have accomplished the task. You should also provide any other pertinent details about the goal. Keep it short and to the point.',
+          placeholder: 'Short description of the vounty...',
           type: QuestionType.Text,
           required: true
         })
@@ -184,6 +190,7 @@ export default {
           amount: this.vounty.prize,
           title: this.vounty.title,
           subtitle: this.vounty.subtitle,
+          description: this.description,
           tags: this.vounty.tags,
           image
         }
@@ -216,10 +223,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.stripe-card {
-  margin-top: 16px;
-}
-
 .prize-input {
   font-size: 1.25rem;
   font-weight: 500;
@@ -246,10 +249,5 @@ export default {
   font-weight: 400;
   margin-bottom: 32px;
   margin-top: 5px;
-}
-
-.svb {
-  margin-top: 16px;
-  padding: 0;
 }
 </style>

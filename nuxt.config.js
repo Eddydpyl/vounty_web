@@ -30,8 +30,9 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/vue-horizontal.js',
-    '~/plugins/vue-currency-input.js'
+    '~/plugins/TiptapVuetify.js',
+    '~/plugins/VueHorizontal.js',
+    '~/plugins/VueCurrencyInput.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

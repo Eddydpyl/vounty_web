@@ -38,9 +38,10 @@
             </div>
           </nuxt-link>
         </div>
-        <div class="mb-2 mr-3 ml-3">
-          <span style="white-space: pre-line;">{{ entry.text }}</span>
-        </div>
+        <div
+          class="mb-2 mr-3 ml-3"
+          v-html="entry.text"
+        />
       </div>
     </div>
   </div>

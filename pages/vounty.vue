@@ -55,6 +55,9 @@
           </template>
         </v-chip-group>
       </v-col>
+      <v-col v-if="vounty.description" cols="12" class="pt-0">
+        <div v-html="vounty.description" />
+      </v-col>
       <v-col cols="12" class="d-md-none">
         <v-container>
           <v-row>
@@ -247,10 +250,7 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-textarea
-                  v-model="entryText"
-                  :rules="rules.entryText"
-                />
+                <tiptap-input v-model="entryText" />
               </v-col>
             </v-row>
             <v-row>
@@ -284,6 +284,7 @@ import CommentCard from '../components/CommentCard'
 import EntryCard from '../components/EntryCard'
 import VountyAvatar from '../components/VountyAvatar'
 import VountyBanner from '../components/VountyBanner'
+import TiptapInput from '../components/TiptapInput'
 
 export default {
   components: {
@@ -292,7 +293,8 @@ export default {
     'comment-card': CommentCard,
     'entry-card': EntryCard,
     'vounty-avatar': VountyAvatar,
-    'vounty-banner': VountyBanner
+    'vounty-banner': VountyBanner,
+    'tiptap-input': TiptapInput
   },
   data () {
     return {
@@ -318,18 +320,13 @@ export default {
         min: 5
       },
       confirm: {
-        commentText: false,
-        entryText: false
+        commentText: false
       },
       rules: {
         commentText: [
           v => !!v || 'The comment can\'t be empty.',
           v => v.length < 250 || 'Maximum 250 characters long',
           v => (this.confirm.commentText = !!v && v.length < 250)
-        ],
-        entryText: [
-          v => !!v || 'The entry can\'t be empty',
-          v => (this.confirm.entryText = !!v)
         ]
       }
     }
@@ -416,7 +413,7 @@ export default {
       })
     },
     async createEntry () {
-      if (!this.confirm.entryText ||
+      if (!this.entryText ||
         this.loading) return
       this.loading = true
       await this.$store.dispatch('entry/create', {
