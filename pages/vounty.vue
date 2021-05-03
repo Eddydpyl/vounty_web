@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row v-if="vounty">
-      <v-col cols="12" class="break-text">
+      <v-col cols="12">
         <h1>{{ vounty.title }}</h1>
         <p>{{ vounty.subtitle }}</p>
       </v-col>
@@ -250,7 +250,10 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <tiptap-input v-model="entryText" />
+                <tiptap-input
+                  v-model="entryText"
+                  placeholder="Provide evidence that you have completed the vounty."
+                />
               </v-col>
             </v-row>
             <v-row>

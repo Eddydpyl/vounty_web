@@ -4,12 +4,12 @@
       <nuxt-link
         v-if="vounty.id && !editable"
         :to="{ name: 'vounty', query: { id: vounty.id }}"
-        class="break-text no-deco"
+        class="no-deco"
       >
         <v-card-title v-text="vounty.title" />
         <v-card-subtitle v-text="vounty.subtitle" />
       </nuxt-link>
-      <div v-else class="break-text">
+      <div v-else>
         <v-card-title v-text="vounty.title" />
         <v-card-subtitle v-text="vounty.subtitle" />
       </div>

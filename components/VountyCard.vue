@@ -3,7 +3,7 @@
     <nuxt-link
       v-if="vounty.id"
       :to="{ name: 'vounty', query: { id: vounty.id }}"
-      class="break-text no-deco"
+      class="no-deco"
       style="flex: 1;"
     >
       <vounty-banner
@@ -17,11 +17,7 @@
       <v-card-title class="headline" v-text="vounty.title" />
       <v-card-subtitle v-text="vounty.subtitle" />
     </nuxt-link>
-    <div
-      v-else
-      class="break-text"
-      style="flex: 1; "
-    >
+    <div v-else style="flex: 1;">
       <vounty-banner
         height="250px"
         font-size="50px"
