@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/Eddydpyl/vounty_web/compare/v0.0.2...v0.0.3) (2021-05-03)
+
+
+### Bug Fixes
+
+* retrieve all tags ([881c865](https://github.com/Eddydpyl/vounty_web/commit/881c865d5c4aaa0cdd03a8e52172486d7b02b3ce))
+
 ### [0.0.2](https://github.com/Eddydpyl/vounty_web/compare/v0.0.1...v0.0.2) (2021-05-03)
 
 
