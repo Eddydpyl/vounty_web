@@ -6,6 +6,7 @@
           small
           class="d-block"
           :class="{ 'liked-text': upvote }"
+          :disabled="!$auth.loggedIn"
           @click="createVote(true)"
         >
           mdi-arrow-up-bold
@@ -17,6 +18,7 @@
           small
           class="d-block"
           :class="{ 'disliked-text': downvote }"
+          :disabled="!$auth.loggedIn"
           @click="createVote(false)"
         >
           mdi-arrow-down-bold
@@ -88,7 +90,7 @@ export default {
       }
     },
     vote () {
-      return this.entry.votes.find(e => e.user.id === this.$auth.user.id)
+      return this.$auth.loggedIn ? this.entry.votes.find(e => e.user.id === this.$auth.user.id) : null
     },
     upvote () {
       return (this.vote && this.vote.like && (!this.voted || this.liked)) || (this.voted && this.liked)
@@ -99,6 +101,7 @@ export default {
   },
   methods: {
     createVote (like) {
+      if (!this.$auth.loggedIn) return
       return this.$store.dispatch('entry/vote', {
         data: {
           id: this.entry.id,
