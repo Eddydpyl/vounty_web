@@ -38,7 +38,13 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head () {
+    return {
+      title: 'Cookie Policy'
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

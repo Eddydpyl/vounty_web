@@ -3,12 +3,19 @@
   font-weight: bold;
 }
 
+.break-text {
+  word-break: break-all;
+}
+
+.no-deco {
+  text-decoration: none;
+}
+
 .underlined {
   background-image: linear-gradient(currentColor, currentColor);
   background-position: 50% 100%;
   background-repeat: no-repeat;
   background-size: 0 1px;
-  text-decoration: none;
   transition: background-size 0.1s;
 }
 

@@ -20,12 +20,17 @@ export const actions = {
   create ({ state, commit }, { data }) {
     const url = '/user/'
     return this.$axios.$post(url, data)
-      .catch((error) => {
-        commit(
-          'error/set',
-          { message: 'Failed to create User.', data },
-          { root: true }
-        )
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
+        commit('error/set', {
+          method: 'user/create',
+          payload: { data }
+        }, { root: true })
         throw error
       })
   },
@@ -39,40 +44,51 @@ export const actions = {
         else commit('set', data)
         return data
       })
-      .catch((error) => {
-        commit(
-          'error/set',
-          {
-            message: id
-              ? 'Failed to read User. The Tag id was ' + id + '.'
-              : 'Failed to read User collection.',
-            data: null
-          },
-          { root: true })
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
+        commit('error/set', {
+          method: 'user/read',
+          payload: { id, params }
+        }, { root: true })
         throw error
       })
   },
   update ({ state, commit }, { id, data }) {
     const url = '/user/' + id + '/'
     return this.$axios.$patch(url, data)
-      .catch((error) => {
-        commit(
-          'error/set',
-          { message: 'Failed to update User with id ' + id + '.', data },
-          { root: true }
-        )
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
+        commit('error/set', {
+          method: 'user/update',
+          payload: { id, data }
+        }, { root: true })
         throw error
       })
   },
   delete ({ state, commit }, { id }) {
     const url = '/user/' + id + '/'
     return this.$axios.$delete(url)
-      .catch((error) => {
-        commit(
-          'error/set',
-          { message: 'Failed to delete User with id ' + id + '.', data: null },
-          { root: true }
-        )
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
+        commit('error/set', {
+          method: 'user/delete',
+          payload: { id }
+        }, { root: true })
         throw error
       })
   }

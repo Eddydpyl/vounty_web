@@ -15,15 +15,20 @@ export const actions = {
     const url = '/storage/'
     return this.$axios.$get(url)
       .then((data) => {
-        commit('storage/set', data)
+        commit('set', data)
         return data
       })
-      .catch((error) => {
-        commit(
-          'error/set',
-          { message: 'Failed to retrieve a storage link.', data: null },
-          { root: true }
-        )
+      .catch(async (error) => {
+        if (error.response.status === 401) {
+          await this.$auth.logout()
+          return this.$router.push({
+            path: '/login'
+          })
+        }
+        commit('error/set', {
+          method: 'storage/link',
+          payload: { }
+        }, { root: true })
         throw error
       })
   }

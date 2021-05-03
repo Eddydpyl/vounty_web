@@ -9,8 +9,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - vounty_web',
-    title: 'vounty_web',
+    titleTemplate: '%s - Vounty',
+    title: 'Vounty',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -30,8 +30,9 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/vue-horizontal.js',
-    '~/plugins/vue-currency-input.js'
+    '~/plugins/TiptapVuetify.js',
+    '~/plugins/VueHorizontal.js',
+    '~/plugins/VueCurrencyInput.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -50,7 +51,9 @@ export default {
     // https://github.com/Developmint/nuxt-purgecss
     'nuxt-purgecss',
     // https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    // https://github.com/nuxt-community/moment-module
+    '@nuxtjs/moment'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -105,6 +108,11 @@ export default {
     enabled: false
   },
 
+  // Moment module configuration: https://github.com/nuxt-community/moment-module#configuration
+  moment: {
+    timezone: true
+  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseUrl: process.env.BASE_URL
@@ -143,7 +151,7 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
-    icon: false,
+    icon: true,
     manifest: {
       lang: 'en'
     }

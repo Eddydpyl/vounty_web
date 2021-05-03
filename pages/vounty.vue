@@ -1,21 +1,20 @@
 <template>
   <v-container>
     <v-row v-if="vounty">
-      <v-col cols="12">
+      <v-col cols="12" class="break-text">
         <h1>{{ vounty.title }}</h1>
         <p>{{ vounty.subtitle }}</p>
       </v-col>
     </v-row>
     <v-row v-if="vounty">
       <v-col cols="12" md="8">
-        <div class="vounty-image">
-          <v-img v-if="vounty.image" :src="vounty.image" />
-          <div v-else class="wanted-text">
-            <p style="margin-top: 12px;">
-              Wanted<br>$$$
-            </p>
-          </div>
-        </div>
+        <vounty-banner
+          height="350px"
+          font-size="50px"
+          :image="vounty.image"
+          text="Wanted<br>$$$"
+          class="v-border"
+        />
       </v-col>
       <v-col md="4" class="d-none d-md-block">
         <h1>{{ vounty.prize }}€</h1>
@@ -24,19 +23,40 @@
         <p>Users participated</p>
         <h1>{{ entries.length }}</h1>
         <p>Entries submitted</p>
-        <v-btn block class="mb-4" @click="fundDialog=true">
+        <v-btn
+          block
+          class="mb-4"
+          :disabled="!$auth.loggedIn"
+          @click="fundDialog=true"
+        >
           Fund the vounty
         </v-btn>
-        <v-btn block @click="entryDialog=true">
+        <v-btn
+          block
+          :disabled="!$auth.loggedIn"
+          @click="entryDialog=true"
+        >
           Make a submission
         </v-btn>
       </v-col>
       <v-col cols="12">
-        <v-chip-group active-class="white black--text" style="margin-bottom: 8px;">
-          <v-chip v-for="tag in vounty.tags" :key="tag.id">
-            {{ tag.text }}
-          </v-chip>
+        <v-chip-group style="margin-bottom: 8px;">
+          <template v-for="tag in vounty.tags">
+            <nuxt-link
+              :key="tag.id"
+              :to="{ name: 'discover', query: { tag: tag.id }}"
+              class="no-deco"
+              replace
+            >
+              <v-chip :value="tag.id">
+                {{ tag.text }}
+              </v-chip>
+            </nuxt-link>
+          </template>
         </v-chip-group>
+      </v-col>
+      <v-col v-if="vounty.description" cols="12" class="pt-0">
+        <div v-html="vounty.description" />
       </v-col>
       <v-col cols="12" class="d-md-none">
         <v-container>
@@ -56,10 +76,19 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <v-btn block class="mb-4">
+              <v-btn
+                block
+                class="mb-4"
+                :disabled="!$auth.loggedIn"
+                @click="fundDialog = true"
+              >
                 Fund the vounty
               </v-btn>
-              <v-btn block>
+              <v-btn
+                block
+                :disabled="!$auth.loggedIn"
+                @click="entryDialog = true"
+              >
                 Make a submission
               </v-btn>
             </v-col>
@@ -67,17 +96,17 @@
         </v-container>
       </v-col>
     </v-row>
-    <v-row v-if="user">
+    <v-row>
       <v-col cols="12">
         <v-divider class="mx-3" />
         <v-container class="pt-0 pb-0">
           <v-row no-gutters>
             <v-spacer>
               <v-tabs background-color="transparent">
-                <v-tab @click="tab = 0">
+                <v-tab @click="switchTab(0)">
                   Comments
                 </v-tab>
-                <v-tab @click="tab = 1">
+                <v-tab @click="switchTab(1)">
                   Entries
                 </v-tab>
               </v-tabs>
@@ -92,52 +121,73 @@
             </v-col>
             <v-col cols="6" sm="3" md="2" style="margin-top: 6px;">
               <v-select
-                v-model="sort"
-                :items="sorts"
+                v-model="ordering"
+                :items="orders"
+                item-text="text"
+                item-value="value"
                 class="sorter"
                 dense
                 solo
+                @change="readItems"
               />
             </v-col>
           </v-row>
         </v-container>
         <div v-if="tab === 0">
-          <div class="d-flex flex-no-wrap">
-            <v-avatar class="v-border ma-3" size="75px" tile>
-              <v-img v-if="user.image" :src="user.image" />
-              <div v-else class="v-text ">
-                <p class="profile-symbol">
-                  V
-                </p>
-              </div>
-            </v-avatar>
-            <v-textarea
+          <div v-if="$auth.loggedIn" class="d-flex flex-no-wrap">
+            <vounty-avatar
+              size="75px"
+              font-size="50px"
+              :image="$auth.user.image"
+              text="V"
+            />
+            <v-text-field
+              v-model="commentText"
               counter
-              no-resize
-              rows="2"
-              max="250"
+              height="70px"
               label="New comment"
-              :value="comment"
               class="comment-area"
+              :rules="rules.commentText"
+              @keyup.enter="createComment"
             />
           </div>
-          <comment-card
-            v-for="comment in comments"
-            :key="comment.id"
-            :comment="comment"
-          />
+          <div v-if="comments.length > 0">
+            <comment-card
+              v-for="comment in comments"
+              :key="comment.id"
+              :comment="comment"
+            />
+          </div>
+          <div v-else class="text-center">
+            <h1 class="mt-3 mb-8">
+              There's nothing here.
+            </h1>
+          </div>
         </div>
         <div v-else>
-          <entry-card
-            v-for="entry in entries"
-            :key="entry.id"
-            :entry="entry"
-          />
+          <div v-if="entries.length > 0">
+            <entry-card
+              v-for="entry in entries"
+              :key="entry.id"
+              :entry="entry"
+            />
+          </div>
+          <div v-else class="text-center">
+            <h1 class="mt-3 mb-8">
+              There's nothing here.
+            </h1>
+          </div>
         </div>
-        <v-pagination v-model="page" :length="3" class="mt-3" />
+        <v-pagination
+          v-model="page"
+          :length="Math.ceil(itemCount / pageSize || 1)"
+          class="mt-3"
+          @input="readItems"
+        />
       </v-col>
     </v-row>
     <v-dialog
+      v-if="$auth.loggedIn"
       v-model="fundDialog"
       max-width="600px"
     >
@@ -162,7 +212,11 @@
             </v-row>
             <v-row>
               <v-col cols="12">
-                <stripe-form />
+                <stripe-form
+                  ref="stripe"
+                  @token="stripeToken"
+                  @error="stripeError"
+                />
               </v-col>
             </v-row>
             <v-row>
@@ -177,13 +231,14 @@
           <v-btn text @click="fundDialog = false">
             Cancel
           </v-btn>
-          <v-btn text @click="fundDialog = false">
+          <v-btn text @click="fundVounty">
             Send
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog
+      v-if="$auth.loggedIn"
       v-model="entryDialog"
       max-width="600px"
     >
@@ -195,7 +250,7 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-textarea />
+                <tiptap-input v-model="entryText" />
               </v-col>
             </v-row>
             <v-row>
@@ -210,12 +265,15 @@
           <v-btn text @click="entryDialog = false">
             Cancel
           </v-btn>
-          <v-btn text @click="entryDialog = false">
+          <v-btn text @click="createEntry">
             Send
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-overlay :value="loading" style="z-index: 1000;">
+      <v-progress-circular indeterminate />
+    </v-overlay>
   </v-container>
 </template>
 
@@ -224,23 +282,35 @@ import { CurrencyInput } from 'vue-currency-input'
 import StripeForm from '../components/StripeForm'
 import CommentCard from '../components/CommentCard'
 import EntryCard from '../components/EntryCard'
+import VountyAvatar from '../components/VountyAvatar'
+import VountyBanner from '../components/VountyBanner'
+import TiptapInput from '../components/TiptapInput'
 
 export default {
   components: {
     'currency-input': CurrencyInput,
     'stripe-form': StripeForm,
     'comment-card': CommentCard,
-    'entry-card': EntryCard
+    'entry-card': EntryCard,
+    'vounty-avatar': VountyAvatar,
+    'vounty-banner': VountyBanner,
+    'tiptap-input': TiptapInput
   },
   data () {
     return {
-      page: 1,
-      comment: '',
       tab: 0,
+      page: 1,
+      pageSize: 10,
+      commentText: '',
+      entryText: '',
+      loading: false,
       fundDialog: false,
       entryDialog: false,
-      sorts: ['Most Voted', 'Latest'],
-      sort: 'Most Voted',
+      orders: [
+        { value: '-vote_count', text: 'Most Voted' },
+        { value: '-date', text: 'Latest' }
+      ],
+      ordering: '-vote_count',
       prize: 0.0,
       currency: {
         prefix: '',
@@ -248,41 +318,164 @@ export default {
       },
       valueRange: {
         min: 5
+      },
+      confirm: {
+        commentText: false
+      },
+      rules: {
+        commentText: [
+          v => !!v || 'The comment can\'t be empty.',
+          v => v.length < 250 || 'Maximum 250 characters long',
+          v => (this.confirm.commentText = !!v && v.length < 250)
+        ]
       }
     }
   },
   async fetch () {
     if (this.$route.query.id != null) {
-      const vounty = await this.$store.dispatch('vounty/read', {
-        id: this.$route.query.id
-      })
-      await this.$store.dispatch('user/read', {
-        id: vounty.user
-      })
-      await this.$store.dispatch('entry/read', {
-        params: {
-          vounty__id: vounty.id
-        }
-      })
-      await this.$store.dispatch('comment/read', {
-        params: {
-          vounty__id: vounty.id
-        }
-      })
+      await this.readVounty()
+      await this.readComments()
+    }
+  },
+  head () {
+    return {
+      title: this.vounty?.title || ''
     }
   },
   computed: {
     vounty () {
       return this.$store.state.vounty.current
     },
-    user () {
-      return this.$store.state.user.current
-    },
-    entries () {
-      return this.$store.state.entry.results
+    itemCount () {
+      if (this.tab === 0) return this.$store.state.comment.count
+      else return this.$store.state.entry.count
     },
     comments () {
       return this.$store.state.comment.results
+    },
+    entries () {
+      return this.$store.state.entry.results
+    }
+  },
+  watch: {
+    async $route (to, from) {
+      if (to.query.id != null) {
+        await this.readVounty()
+        await this.readComments()
+      }
+    }
+  },
+  methods: {
+    readVounty () {
+      this.loading = true
+      return this.$store.dispatch('vounty/read', {
+        id: this.$route.query.id
+      }).then((data) => {
+        this.loading = false
+        return data
+      })
+    },
+    readItems () {
+      if (this.tab === 0) {
+        return this.readComments()
+      } else {
+        return this.readEntries()
+      }
+    },
+    async createComment () {
+      if (!this.confirm.commentText ||
+        this.loading) return
+      this.loading = true
+      await this.$store.dispatch('comment/create', {
+        data: {
+          user: this.$auth.user.id,
+          vounty: this.vounty.id,
+          text: this.commentText
+        }
+      }).then(async (data) => {
+        await this.readComments()
+        this.commentText = ''
+        this.loading = false
+        return data
+      })
+    },
+    readComments () {
+      this.loading = true
+      return this.$store.dispatch('comment/read', {
+        params: {
+          vounty__id: this.vounty.id,
+          page: this.page,
+          ordering: this.ordering
+        }
+      }).then((data) => {
+        this.loading = false
+        return data
+      })
+    },
+    async createEntry () {
+      if (!this.entryText ||
+        this.loading) return
+      this.loading = true
+      await this.$store.dispatch('entry/create', {
+        data: {
+          user: this.$auth.user.id,
+          vounty: this.vounty.id,
+          text: this.entryText
+        }
+      }).then(async (data) => {
+        await this.readEntries()
+        this.entryDialog = false
+        this.entryText = ''
+        this.loading = false
+        return data
+      })
+    },
+    readEntries () {
+      this.loading = true
+      return this.$store.dispatch('entry/read', {
+        params: {
+          vounty__id: this.vounty.id,
+          page: this.page,
+          ordering: this.ordering
+        }
+      }).then((data) => {
+        this.loading = false
+        return data
+      })
+    },
+    fundVounty () {
+      if (this.loading) return
+      this.$refs.stripe.submit()
+      this.loading = true
+    },
+    stripeToken (token) {
+      return this.$store.dispatch('vounty/fund', {
+        data: {
+          token,
+          id: this.vounty.id,
+          amount: this.prize
+        }
+      }).then(async (data) => {
+        await this.readVounty()
+        this.$refs.stripe.clear()
+        this.fundDialog = false
+        this.loading = false
+        return data
+      })
+    },
+    stripeError (error) {
+      // TODO: Handle error.
+      this.loading = false
+      throw error
+    },
+    switchTab (tab) {
+      this.tab = tab
+      this.page = 1
+      if (tab === 0) {
+        return this.readComments()
+      } else {
+        return this.readEntries()
+      }
     }
   }
 }
@@ -305,17 +498,6 @@ export default {
   outline: none;
 }
 
-.vounty-image {
-  border-color: #fff;
-  border-style: solid;
-  border-width: 1px;
-  width: 100%;
-}
-
-.vounty-image .v-image {
-  max-height: 350px;
-}
-
 ::v-deep .theme--dark.v-pagination .v-pagination__item--active {
   color: #000;
   outline: none;
@@ -323,17 +505,11 @@ export default {
 
 .comment-area {
   margin-right: 16px;
-  margin-top: 18px;
 }
 
 .sort-text {
   margin-top: 6px;
   text-align: right;
-}
-
-.profile-symbol {
-  font-size: 50px;
-  margin-top: 12px;
 }
 
 .wanted-text {

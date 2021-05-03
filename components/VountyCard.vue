@@ -1,9 +1,10 @@
 <template>
-  <v-card>
+  <v-card :height="height" class="v-card">
     <nuxt-link
       v-if="vounty.id"
       :to="{ name: 'vounty', query: { id: vounty.id }}"
-      style="text-decoration: none;"
+      class="break-text no-deco"
+      style="flex: 1;"
     >
       <vounty-banner
         height="250px"
@@ -16,7 +17,11 @@
       <v-card-title class="headline" v-text="vounty.title" />
       <v-card-subtitle v-text="vounty.subtitle" />
     </nuxt-link>
-    <div v-else>
+    <div
+      v-else
+      class="break-text"
+      style="flex: 1; "
+    >
       <vounty-banner
         height="250px"
         font-size="50px"
@@ -32,9 +37,18 @@
     <div class="d-flex flex-no-wrap justify-space-between">
       <v-card-text>
         <v-chip-group>
-          <v-chip v-for="tag in vounty.tags" :key="tag.id">
-            {{ tag.text }}
-          </v-chip>
+          <template v-for="tag in vounty.tags">
+            <nuxt-link
+              :key="tag.id"
+              :to="{ name: 'discover', query: { tag: tag.id }}"
+              class="no-deco"
+              replace
+            >
+              <v-chip>
+                {{ tag.text }}
+              </v-chip>
+            </nuxt-link>
+          </template>
         </v-chip-group>
       </v-card-text>
       <slot name="prize">
@@ -64,12 +78,21 @@ export default {
       default () {
         return { tags: [] }
       }
+    },
+    height: {
+      type: String,
+      default: null
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.v-card {
+  display: flex;
+  flex-direction: column;
+}
+
 .card-prize {
   width: 200px;
   word-break: keep-all;

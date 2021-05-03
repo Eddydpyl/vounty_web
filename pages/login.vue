@@ -27,7 +27,6 @@
             @keyup.enter="submit"
           />
           <v-text-field
-            id="password"
             v-model="password"
             :rules="rules.password"
             prepend-icon="mdi-lock"
@@ -38,11 +37,10 @@
           />
           <v-text-field
             v-if="tab === 1"
-            id="confirmPassword"
-            v-model="confirmPassword"
-            :rules="rules.confirmPassword"
+            v-model="repassword"
+            :rules="rules.repassword"
             prepend-icon="mdi-lock"
-            name="confirmPassword"
+            name="repassword"
             label="Confirm Password"
             type="password"
             @keyup.enter="submit"
@@ -74,6 +72,9 @@
         </v-form>
       </v-col>
     </v-row>
+    <v-overlay :value="loading">
+      <v-progress-circular indeterminate />
+    </v-overlay>
   </v-container>
 </template>
 
@@ -85,15 +86,51 @@ export default {
       username: '',
       email: '',
       password: '',
-      confirmPassword: '',
+      repassword: '',
       tab: 0,
-      valid: false,
+      loading: false,
+      confirm: {
+        username: false,
+        email: false,
+        password: false,
+        repassword: false
+      },
       rules: {
-        username: [v => !!v || 'Username is required'],
-        email: [v => !!v || 'Email is required'],
-        password: [v => !!v || 'Password is required'],
-        confirmPassword: [v => !!v || 'Confirm your password']
+        username: [
+          v => !!v || 'Username is required',
+          v => (this.confirm.username = !!v)
+        ],
+        email: [
+          v => !!v || 'Email is required',
+          v => /.+@.+\..+/.test(v) || 'The email is not valid',
+          v => (this.confirm.email = !!v && /.+@.+\..+/.test(v))
+        ],
+        password: [
+          v => !!v || 'Password is required',
+          v => v !== this.username || 'The password can\'t match your username',
+          v => v !== this.email || 'The password can\'t match your email',
+          v => v.length > 8 || 'The password must be 8 characters or longer',
+          v => isNaN(v) || 'The password can\'t be only numbers',
+          v => (this.confirm.password = !!v && v !== this.username &&
+            v !== this.email && v.length > 8 && isNaN(v))
+        ],
+        repassword: [
+          v => !!v || 'Confirm your password',
+          v => v === this.password || 'The passwords don\'t match',
+          v => (this.confirm.repassword = !!v && v === this.password)
+        ]
       }
+    }
+  },
+  head () {
+    return {
+      title: 'Login'
+    }
+  },
+  computed: {
+    valid () {
+      if (this.tab === 0) return this.confirm.username && this.confirm.password
+      else return Object.values(this.confirm).every(x => x)
     }
   },
   methods: {
@@ -105,22 +142,53 @@ export default {
         this.register()
       }
     },
-    async login () {
-      try {
-        await this.$auth.loginWith('local', {
+    login () {
+      if (!this.valid ||
+        this.loading) return
+      this.loading = true
+      return this.$auth.loginWith('local', {
+        data: {
+          username: this.username,
+          password: this.password
+        }
+      }).then(() => {
+        this.loading = false
+        return this.$router.push({ path: '/' })
+      }).catch((error) => {
+        this.$store.commit('error/set',
+          { method: 'login' })
+        this.$refs.form.reset()
+        this.loading = false
+        throw error
+      })
+    },
+    register () {
+      if (!this.valid ||
+        this.loading) return
+      this.loading = true
+      return this.$store.dispatch('user/create', {
+        data: {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        }
+      }).then(() => {
+        return this.$auth.loginWith('local', {
           data: {
             username: this.username,
             password: this.password
           }
+        }).then(() => {
+          this.loading = false
+          return this.$router.push({ path: '/' })
+        }).catch((error) => {
+          this.$store.commit('error/set',
+            { method: 'login' })
+          this.$refs.form.reset()
+          this.loading = false
+          throw error
         })
-        return this.$router.push({ path: '/' })
-      } catch (err) {
-        this.$refs.form.reset()
-        console.log(err)
-      }
-    },
-    async register () {
-      // TODO
+      })
     }
   }
 }

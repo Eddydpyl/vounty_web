@@ -2,19 +2,32 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-chip-group active-class="white black--text">
-          <v-chip v-for="tag in tags" :key="tag.id">
-            {{ tag.text }}
-          </v-chip>
+        <v-chip-group v-model="tagId" active-class="white black--text">
+          <template v-for="tag in tags">
+            <nuxt-link
+              :key="tag.id"
+              :to="{ name: 'discover', query: { tag: tag.id }}"
+              class="no-deco"
+              replace
+            >
+              <v-chip :value="tag.id">
+                {{ tag.text }}
+              </v-chip>
+            </nuxt-link>
+          </template>
         </v-chip-group>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="popular.length > 0">
       <v-col cols="12" lg="6">
         <h3 class="mb-3">
           Featured vounty
         </h3>
-        <vounty-card :vounty="featured" />
+        <vounty-card
+          v-if="featured"
+          :vounty="featured"
+          :height="featureHeight"
+        />
       </v-col>
       <v-col cols="12" lg="6">
         <h3 class="mb-3">
@@ -28,7 +41,11 @@
             :class="{ 'mb-5': index !== popular.length - 1 }"
           />
         </div>
-        <div v-else class="popular-scroll">
+        <div
+          v-else
+          class="popular-scroll"
+          :style="scrollStyle"
+        >
           <small-vounty-card
             v-for="vounty in popular"
             :key="vounty.id"
@@ -38,7 +55,7 @@
         </div>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="recent.length > 0">
       <v-col cols="12">
         <h3 class="mb-3">
           Recent vounties
@@ -64,6 +81,14 @@
         </div>
       </v-col>
     </v-row>
+    <v-row v-else no-gutters>
+      <v-col cols="12">
+        <h1>There's nothing here...</h1>
+      </v-col>
+    </v-row>
+    <v-overlay :value="loading">
+      <v-progress-circular indeterminate />
+    </v-overlay>
   </v-container>
 </template>
 
@@ -78,203 +103,23 @@ export default {
   },
   data () {
     return {
-      tags: [
-        {
-          id: 1,
-          text: 'Tag 1'
-        },
-        {
-          id: 2,
-          text: 'Tag 2'
-        },
-        {
-          id: 3,
-          text: 'Tag 3'
-        },
-        {
-          id: 4,
-          text: 'Tag 4'
-        }
-      ],
-      featured: {
-        id: 1,
-        title: 'Lorem Ipsum',
-        subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-        prize: 276.57,
-        tags: [
-          {
-            id: 1,
-            text: 'Tag 1'
-          },
-          {
-            id: 2,
-            text: 'Tag 2'
-          },
-          {
-            id: 3,
-            text: 'Tag 3'
-          },
-          {
-            id: 4,
-            text: 'Tag 4'
-          }
-        ]
-      },
-      popular: [
-        {
-          id: 1,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        }
-      ],
-      recent: [
-        {
-          id: 1,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: 'Lorem Ipsum',
-          subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          image: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-          prize: 276.57,
-          tags: [
-            {
-              id: 1,
-              text: 'Tag 1'
-            },
-            {
-              id: 2,
-              text: 'Tag 2'
-            },
-            {
-              id: 3,
-              text: 'Tag 3'
-            },
-            {
-              id: 4,
-              text: 'Tag 4'
-            }
-          ]
-        }
-      ]
+      loading: false,
+      featured: null,
+      popular: [],
+      recent: [],
+      tagId: null
+    }
+  },
+  async fetch () {
+    if (this.$route.query.tag != null) {
+      this.tagId = this.$route.query.tag
+    }
+    await this.$store.dispatch('tag/read', {})
+    await this.readVounties()
+  },
+  head () {
+    return {
+      title: 'Discover'
     }
   },
   computed: {
@@ -285,6 +130,56 @@ export default {
         case 'md': return true
         default: return false
       }
+    },
+    featureHeight () {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return null
+        case 'sm': return null
+        case 'md': return null
+        default: return '500px'
+      }
+    },
+    scrollStyle () {
+      return 'height: ' + this.featureHeight + ';'
+    },
+    tags () {
+      return this.$store.state.tag.results
+    }
+  },
+  watch: {
+    $route (to, from) {
+      if (to.query.tag) {
+        this.tagId = to.query.tag
+        this.readVounties()
+      }
+    }
+  },
+  methods: {
+    async readVounties () {
+      this.loading = true
+      this.featured = await this.$store.dispatch('vounty/read', {
+        params: {
+          tags__id: this.tagId,
+          featured: 'True',
+          ordering: '-date',
+          page_size: 1
+        }
+      }).then(data => data.results ? data.results[0] : null)
+      this.popular = await this.$store.dispatch('vounty/read', {
+        params: {
+          tags__id: this.tagId,
+          ordering: '-fund_count',
+          page_size: 5
+        }
+      }).then(data => data.results)
+      this.recent = await this.$store.dispatch('vounty/read', {
+        params: {
+          tags__id: this.tagId,
+          ordering: '-date',
+          page_size: 5
+        }
+      }).then(data => data.results)
+      this.loading = false
     }
   }
 }
@@ -292,7 +187,6 @@ export default {
 
 <style lang="scss" scoped>
 .popular-scroll {
-  max-height: 450px;
   overflow-y: auto;
   padding-right: 10px;
 }

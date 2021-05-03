@@ -85,7 +85,6 @@ export default {
 
 <style lang="scss" scoped>
 .centered-text {
-  cursor: default;
   margin-right: -50%;
   position: absolute;
   text-align: center;

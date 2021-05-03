@@ -2,8 +2,10 @@
   <v-app dark>
     <v-app-bar fixed app>
       <v-app-bar-nav-icon v-if="showDrawer" @click.stop="drawer = !drawer" />
-      <v-app-bar-title v-if="showDrawer" class="wanted-title" v-text="'Vounty'" />
-      <v-app-bar-title v-else class="wanted-title" style="margin-left: 26px;" v-text="'Vounty'" />
+      <nuxt-link to="/" class="no-deco">
+        <v-app-bar-title v-if="showDrawer" class="wanted-title" v-text="'Vounty'" />
+        <v-app-bar-title v-else class="wanted-title" style="margin-left: 26px;" v-text="'Vounty'" />
+      </nuxt-link>
 
       <v-tabs v-if="!showDrawer" align-with-title optional>
         <v-tab to="/" nuxt class="bold-text">
@@ -19,12 +21,6 @@
 
       <v-spacer />
 
-      <v-btn :ripple="false" plain class="bold-text">
-        Search
-        <v-icon right>
-          mdi-magnify
-        </v-icon>
-      </v-btn>
       <div v-if="!showDrawer">
         <v-menu v-if="$auth.loggedIn" bottom left>
           <template #activator="{ on, attrs }">
@@ -152,13 +148,13 @@
             <span class="bold-text">
               &copy;&nbsp;&nbsp;Vounty&nbsp;&nbsp;|&nbsp;
             </span>
-            <NuxtLink to="/terms" class="underlined">
+            <NuxtLink to="/terms" class="underlined no-deco">
               Terms of Use
             </NuxtLink>&nbsp;|&nbsp;
-            <NuxtLink to="/privacy" class="underlined">
+            <NuxtLink to="/privacy" class="underlined no-deco">
               Privacy Policy
             </NuxtLink>&nbsp;|&nbsp;
-            <NuxtLink to="/cookies" class="underlined">
+            <NuxtLink to="/cookies" class="underlined no-deco">
               Cookie Policy
             </NuxtLink>
           </v-col>
