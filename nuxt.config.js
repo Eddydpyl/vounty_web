@@ -101,7 +101,9 @@ export default {
   },
 
   // Google Analytics module configuration: https://google-analytics.nuxtjs.org/options
-  googleAnalytics: {},
+  googleAnalytics: {
+    id: process.env.GOOGLE_ANALYTICS_ID
+  },
 
   // PurgeCSS module configuration: https://github.com/Developmint/nuxt-purgecss#options
   purgeCSS: {

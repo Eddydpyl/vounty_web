@@ -41,6 +41,7 @@ jobs:
           BASE_URL: 'https://api.vounty.io'
           CLIENT_ID: ${{ secrets.CLIENT_PROD }}
           STRIPE_KEY: ${{ secrets.STRIPE_PROD }}
+          GOOGLE_ANALYTICS_ID: ${{ secrets.GOOGLE_ANALYTICS_ID }}
 
       - name: Deploy to Firebase 🔥
         uses: FirebaseExtended/action-hosting-deploy@v0
