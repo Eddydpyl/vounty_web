@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/Eddydpyl/vounty_web/compare/v0.0.4...v0.0.5) (2021-05-03)
+
+
+### Features
+
+* google analytics integration ([8cb2600](https://github.com/Eddydpyl/vounty_web/commit/8cb2600892326329e73261d6b3f277137d3d4d9a))
+
 ### [0.0.4](https://github.com/Eddydpyl/vounty_web/compare/v0.0.3...v0.0.4) (2021-05-03)
 
 
