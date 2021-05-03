@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/Eddydpyl/vounty_web/compare/v0.0.6...v0.0.7) (2021-05-03)
+
+
+### Bug Fixes
+
+* disable actions for anonymous ([f83a8d6](https://github.com/Eddydpyl/vounty_web/commit/f83a8d66a357848d87367eece9795cecf00dc9d9))
+
 ### [0.0.6](https://github.com/Eddydpyl/vounty_web/compare/v0.0.5...v0.0.6) (2021-05-03)
 
 
