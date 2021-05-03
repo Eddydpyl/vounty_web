@@ -14,6 +14,7 @@
           small
           style="margin-top: -4px;"
           :class="{ 'liked-text': upvote }"
+          :disabled="!$auth.loggedIn"
           @click="createVote(true)"
         >
           mdi-chevron-up
@@ -25,6 +26,7 @@
           small
           style="margin-top: -4px;"
           :class="{ 'disliked-text': downvote }"
+          :disabled="!$auth.loggedIn"
           @click="createVote(false)"
         >
           mdi-chevron-down
@@ -41,6 +43,7 @@
           small
           style="margin-top: -4px;"
           :class="{ 'liked-text': upvote }"
+          :disabled="!$auth.loggedIn"
           @click="createVote(true)"
         >
           mdi-chevron-up
@@ -52,6 +55,7 @@
           small
           style="margin-top: -4px;"
           :class="{ 'disliked-text': downvote }"
+          :disabled="!$auth.loggedIn"
           @click="createVote(false)"
         >
           mdi-chevron-down
@@ -108,7 +112,7 @@ export default {
       }
     },
     vote () {
-      return this.comment.votes.find(v => v.user.id === this.$auth.user.id)
+      return this.$auth.loggedIn ? this.comment.votes.find(v => v.user.id === this.$auth.user.id) : null
     },
     upvote () {
       return (this.vote && this.vote.like && (!this.voted || this.liked)) || (this.voted && this.liked)
@@ -119,6 +123,7 @@ export default {
   },
   methods: {
     createVote (like) {
+      if (!this.$auth.loggedIn) return
       return this.$store.dispatch('comment/vote', {
         data: {
           id: this.comment.id,

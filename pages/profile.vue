@@ -140,7 +140,7 @@ export default {
       return this.$store.state.user.current
     },
     isme () {
-      return this.user && this.user.id === this.$auth.user.id
+      return this.user && this.$auth.loggedIn && this.user.id === this.$auth.user.id
     },
     itemCount () {
       if (this.tab === 0) return -1
