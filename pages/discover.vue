@@ -114,7 +114,11 @@ export default {
     if (this.$route.query.tag != null) {
       this.tagId = this.$route.query.tag
     }
-    await this.$store.dispatch('tag/read', {})
+    await this.$store.dispatch('tag/read', {
+      params: {
+        page_size: 100
+      }
+    })
     await this.readVounties()
   },
   head () {
