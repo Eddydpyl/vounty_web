@@ -1,6 +1,7 @@
 <template>
   <tiptap-vuetify
     v-model="text"
+    :placeholder="placeholder"
     :extensions="extensions"
   />
 </template>
@@ -17,6 +18,11 @@ export default {
     value: {
       type: String,
       required: true,
+      default: ''
+    },
+    placeholder: {
+      type: String,
+      required: false,
       default: ''
     }
   },

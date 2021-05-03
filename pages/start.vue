@@ -11,7 +11,7 @@
         Almost done!
       </h2>
       <p class="final-subtitle">
-        Below is a preview of how your vounty would look. You can add an image to the vounty by clicking on it. You can also click on the prize money to change how much you would like to contribute to kick things off. The minimum amount is 5€. Below the vounty preview, you can add a more complete description, and your credit card information. Your credit card information is not stored in our database, nor shared with any other third party, and only used to process the payment through Stripe.
+        Below is a preview of how your vounty would look. You can add an image to the vounty by clicking on it. You can also click on the prize money to change how much you would like to contribute to kick things off. The minimum amount is 5€. Below the vounty preview, you can add a more complete description, and your credit card information. It is not stored in our database, nor shared with any other third party, and only used to process the payment through Stripe.
       </p>
       <vounty-card
         v-if="mobile"
@@ -45,6 +45,7 @@
       </small-vounty-card>
       <tiptap-input
         v-model="description"
+        placeholder="Here you can provide as much information as you like, and link to relevant websites."
         class="mt-4"
       />
       <v-card class="mt-4">
@@ -111,13 +112,15 @@ export default {
           subtitle: 'Describe in a short sentence what it is that you are looking for. Be specific, but also keep it brief. You will have a chance to provide more details in a moment.',
           placeholder: 'Name of the vounty...',
           type: QuestionType.Text,
+          maxLength: 100,
           required: true
         }),
         new QuestionModel({
           title: 'How does one claim the vounty?',
-          subtitle: 'Tell people how they can go about proving that they have accomplished the task. You should also provide any other pertinent details about the goal. Keep it short and to the point.',
+          subtitle: 'Tell people how they can go about proving that they have accomplished the task. Keep it short and to the point. There\'s still one more, bigger field for extra details.',
           placeholder: 'Short description of the vounty...',
           type: QuestionType.Text,
+          maxLength: 250,
           required: true
         })
       ],
@@ -161,8 +164,8 @@ export default {
     vounty () {
       if (this.completed) {
         return {
-          title: this.truncate(this.questions[0].answer, 100),
-          subtitle: this.truncate(this.questions[1].answer, 250),
+          title: this.questions[0].answer,
+          subtitle: this.questions[1].answer,
           tags: this.questions[2].answer.map(id => this.$store
             .state.tag.results.find(t => t.id === id)),
           prize: this.prize,
@@ -216,11 +219,6 @@ export default {
         this.file = e.target.files[0]
         this.image = URL.createObjectURL(this.file)
       }
-    },
-    truncate (text, length) {
-      if (text.length > length) {
-        return text.substring(0, length - 3) + '...'
-      } else return text
     }
   }
 }
