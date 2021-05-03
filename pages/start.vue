@@ -127,7 +127,11 @@ export default {
     }
   },
   async fetch () {
-    await this.$store.dispatch('tag/read', {})
+    await this.$store.dispatch('tag/read', {
+      params: {
+        page_size: 100
+      }
+    })
     const options = this.$store.state.tag.results
       .map(t => new ChoiceOption({ value: t.id, label: t.text }))
     this.questions.push(new QuestionModel({
