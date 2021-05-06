@@ -21,7 +21,7 @@
         <p>Total contributed</p>
         <h1>{{ vounty.fund_count }}</h1>
         <p>Users participated</p>
-        <h1>{{ entries.length }}</h1>
+        <h1>{{ vounty.entry_count }}</h1>
         <p>Entries submitted</p>
         <v-btn
           block
