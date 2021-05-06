@@ -20,7 +20,7 @@
     "@nuxtjs/robots": "^2.5.0",
     "@nuxtjs/sitemap": "^2.4.0",
     "browser-image-compression": "^1.0.14",
-    "core-js": "^3.11.0",
+    "core-js": "^3.11.3",
     "nuxt": "^2.15.4",
     "nuxt-i18n": "^6.26.0",
     "nuxt-stripe-module": "^3.2.0",
