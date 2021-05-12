@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@ditdot-dev/vue-flow-form": "github:darter/vue-flow-form#build",
-    "@nuxtjs/auth-next": "5.0.0-1618898588.9655d0e",
+    "@nuxtjs/auth-next": "5.0.0-1620773067.c356fed",
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/robots": "^2.5.0",
