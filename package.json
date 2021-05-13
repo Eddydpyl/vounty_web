@@ -47,7 +47,7 @@
     "eslint-plugin-vue": "^7.9.0",
     "fibers": "^5.0.0",
     "nuxt-purgecss": "^1.0.0",
-    "sass": "^1.32.11",
+    "sass": "^1.32.13",
     "sass-loader": "^10.1.1",
     "standard-version": "^9.2.0",
     "stylelint": "^13.13.0",
