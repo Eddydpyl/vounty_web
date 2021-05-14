@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.4",
     "@nuxt/types": "^2.15.4",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config": "^6.0.0",
