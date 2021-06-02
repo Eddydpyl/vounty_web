@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/Eddydpyl/vounty_web/compare/v0.0.7...v0.0.8) (2021-05-06)
+
+
+### Bug Fixes
+
+* vounty entry count ([422fa39](https://github.com/Eddydpyl/vounty_web/commit/422fa39be6cf669820e77c899bc186ae394cfe21))
+
 ### [0.0.7](https://github.com/Eddydpyl/vounty_web/compare/v0.0.6...v0.0.7) (2021-05-03)
 
 
