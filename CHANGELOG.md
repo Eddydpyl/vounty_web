@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/Eddydpyl/vounty_web/compare/v0.0.8...v0.0.9) (2021-06-02)
+
+
+### Features
+
+* socials & reddit ([9107961](https://github.com/Eddydpyl/vounty_web/commit/910796175a0e6cc926ce99c37d378721bbf6ee66)), closes [#17](https://github.com/Eddydpyl/vounty_web/issues/17)
+* update dependencies ([49dc059](https://github.com/Eddydpyl/vounty_web/commit/49dc0592bf753acd224fec30bd9647d7a87761a8))
+
 ### [0.0.8](https://github.com/Eddydpyl/vounty_web/compare/v0.0.7...v0.0.8) (2021-05-06)
 
 
