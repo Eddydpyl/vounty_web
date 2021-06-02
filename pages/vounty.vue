@@ -39,8 +39,8 @@
           Make a submission
         </v-btn>
       </v-col>
-      <v-col cols="12">
-        <v-chip-group style="margin-bottom: 8px;">
+      <v-col cols="6">
+        <v-chip-group class="mt-1 mb-1">
           <template v-for="tag in vounty.tags">
             <nuxt-link
               :key="tag.id"
@@ -54,6 +54,50 @@
             </nuxt-link>
           </template>
         </v-chip-group>
+      </v-col>
+      <v-col cols="6">
+        <div class="d-flex mt-2 mr-3 justify-end">
+          <ShareNetwork
+            network="twitter"
+            :url="'https://vounty.io/vounty?id=' + vounty.id"
+            :title="vounty.title"
+            :description="vounty.subtitle"
+            hashtags="Vounty"
+            class="social mr-5"
+          >
+            <v-icon large>mdi-twitter</v-icon>
+          </ShareNetwork>
+          <ShareNetwork
+            network="reddit"
+            :url="'https://vounty.io/vounty?id=' + vounty.id"
+            :title="vounty.title"
+            :description="vounty.subtitle"
+            hashtags="Vounty"
+            class="social mr-5"
+          >
+            <v-icon large>mdi-reddit</v-icon>
+          </ShareNetwork>
+          <ShareNetwork
+            network="facebook"
+            :url="'https://vounty.io/vounty?id=' + vounty.id"
+            :title="vounty.title"
+            :description="vounty.subtitle"
+            hashtags="Vounty"
+            class="social mr-5"
+          >
+            <v-icon large>mdi-facebook</v-icon>
+          </ShareNetwork>
+          <ShareNetwork
+            network="linkedIn"
+            :url="'https://vounty.io/vounty?id=' + vounty.id"
+            :title="vounty.title"
+            :description="vounty.subtitle"
+            hashtags="Vounty"
+            class="social"
+          >
+            <v-icon large>mdi-linkedin</v-icon>
+          </ShareNetwork>
+        </div>
       </v-col>
       <v-col v-if="vounty.description" cols="12" class="pt-0">
         <div v-html="vounty.description" />
@@ -103,6 +147,9 @@
           <v-row no-gutters>
             <v-spacer>
               <v-tabs background-color="transparent">
+                <a class="d-flex justify-center align-center reddit-tab" :href="vounty.reddit" target="_blank">
+                  <v-icon x-large color="black">mdi-reddit</v-icon>
+                </a>
                 <v-tab @click="switchTab(0)">
                   Comments
                 </v-tab>
@@ -519,6 +566,17 @@ export default {
   font-family: 'Rye', sans-serif;
   font-size: 100px;
   text-align: center;
+}
+
+.social {
+  color: #fff;
+  text-decoration: none;
+  width: 22px;
+}
+
+.reddit-tab {
+  background-color: #fff;
+  width: 50px;
 }
 
 @media screen and (max-width:1264px) {
