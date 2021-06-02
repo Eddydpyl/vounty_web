@@ -77,7 +77,9 @@ export default {
     // https://github.com/WilliamDASILVA/nuxt-stripe-module
     'nuxt-stripe-module',
     // https://dm4t2.github.io/vue-currency-input/
-    'vue-currency-input/nuxt'
+    'vue-currency-input/nuxt',
+    // https://github.com/nicolasbeauvais/vue-social-sharing
+    'vue-social-sharing/nuxt'
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
