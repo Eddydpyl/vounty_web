@@ -27,7 +27,7 @@
     "tiptap-vuetify": "^2.24.0",
     "vue-currency-input": "^1.22.6",
     "vue-horizontal": "^0.8.10",
-    "vue-social-sharing": "^3.0.7"
+    "vue-social-sharing": "^3.0.8"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
