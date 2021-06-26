@@ -56,6 +56,6 @@
     "stylelint-order": "^4.1.0",
     "stylelint-scss": "^3.19.0",
     "webpack": "^4.46.0",
-    "vuetify": "2.4.11"
+    "vuetify": "2.5.5"
   }
 }
