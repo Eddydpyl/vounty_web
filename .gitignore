@@ -76,6 +76,11 @@ dist
 .serverless
 
 # IDE / Editor
+.history
+.vscode
+.settings
+.classpath
+.project
 .idea
 
 # Service worker

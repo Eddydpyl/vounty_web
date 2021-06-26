@@ -13,7 +13,6 @@ module.exports = {
   ],
   plugins: [
   ],
-  // add your custom rules here
   rules: {
     curly: [2, 'multi-line']
   }
